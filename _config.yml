@@ -101,3 +101,4 @@ deploy:
   type: git
   repo: https://github.com/BigtigerGG/yukino-blog
   branch: gh-pages
+  token: 62b94efc73c953fa1942c71f7c770237f75e99b9
