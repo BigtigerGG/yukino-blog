@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/yukino-blog/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/yukino-blog/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/yukino-blog/images/favicon.png">
+  <link rel="mask-icon" href="/yukino-blog/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/yukino-blog/css/main.css">
+
+
+<link rel="stylesheet" href="/yukino-blog/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://bigtigergg.github.io/yukino-blog').hostname,
+    root: '/yukino-blog/',
+    scheme: 'Muse',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="动画和过度这篇文章记录了 Vue 对动画和过度效果的支持，同时记录了我的一些理解 组件的过渡Vue 提供了 transition 内置组件用于下列情形的任意元素的过渡：  条件渲染（v-if) 条件展示（v-show) 动态组件（被 component 包裹的组件） 组件根节点  被 transition 组件包裹的组件在插入或者删除的时候，Vue 会做下述护理：    自动探测 transiti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动画和过渡">
+<meta property="og:url" content="https://bigtigergg.github.io/yukino-blog/2020/01/20/vue/vuebase/%E5%8A%A8%E7%94%BB%E5%92%8C%E8%BF%87%E6%B8%A1/index.html">
+<meta property="og:site_name" content="Yukino&#39;s Blog">
+<meta property="og:description" content="动画和过度这篇文章记录了 Vue 对动画和过度效果的支持，同时记录了我的一些理解 组件的过渡Vue 提供了 transition 内置组件用于下列情形的任意元素的过渡：  条件渲染（v-if) 条件展示（v-show) 动态组件（被 component 包裹的组件） 组件根节点  被 transition 组件包裹的组件在插入或者删除的时候，Vue 会做下述护理：    自动探测 transiti">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bigtigergg.github.io/yukino-blog/images/transition.png">
+<meta property="article:published_time" content="2020-01-20T15:31:25.000Z">
+<meta property="article:modified_time" content="2020-01-20T16:11:53.687Z">
+<meta property="article:author" content="Yukino Li">
+<meta property="article:tag" content="Vue Motion">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bigtigergg.github.io/yukino-blog/images/transition.png">
+
+<link rel="canonical" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/vue/vuebase/%E5%8A%A8%E7%94%BB%E5%92%8C%E8%BF%87%E6%B8%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>动画和过渡 | Yukino's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/yukino-blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yukino's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">study and life</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/yukino-blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/yukino-blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/yukino-blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/yukino-blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/yukino-blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/yukino-blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/vue/vuebase/%E5%8A%A8%E7%94%BB%E5%92%8C%E8%BF%87%E6%B8%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
+      <meta itemprop="name" content="Yukino Li">
+      <meta itemprop="description" content="a blogging site to log my study and life">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yukino's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          动画和过渡
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-20 23:31:25" itemprop="dateCreated datePublished" datetime="2020-01-20T23:31:25+08:00">2020-01-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-21 00:11:53" itemprop="dateModified" datetime="2020-01-21T00:11:53+08:00">2020-01-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/Vue-Base/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue Base</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="动画和过度"><a href="#动画和过度" class="headerlink" title="动画和过度"></a>动画和过度</h1><p>这篇文章记录了 Vue 对动画和过度效果的支持，同时记录了我的一些理解</p>
+<h2 id="组件的过渡"><a href="#组件的过渡" class="headerlink" title="组件的过渡"></a><strong>组件的过渡</strong></h2><p>Vue 提供了 <code>transition</code> 内置组件用于下列情形的任意元素的过渡：</p>
+<ul>
+<li>条件渲染（<code>v-if</code>)</li>
+<li>条件展示（<code>v-show</code>)</li>
+<li>动态组件（被 <code>component</code> 包裹的组件）</li>
+<li>组件根节点</li>
+</ul>
+<p>被 <code>transition</code> 组件包裹的组件在插入或者删除的时候，Vue 会做下述护理：  </p>
+<ol>
+<li><p>自动探测 <code>transition</code> 组件是否应用了 css过渡或者动画，如果是，则在恰当的时机<br>添加或者删除相应的 class 类</p>
+</li>
+<li><p>如果过渡组件提供了相应的 Javascript 钩子函数，这些钩子函数会在恰当的时机被调用  </p>
+</li>
+<li><p>如果没有上述两种情况，则 DOM 操作会在下一帧立即执行，也就是说没有过渡的效果</p>
+</li>
+</ol>
+<p>使用 <code>transition</code> 组件的方法是给这个组件定义一个 name 属性，这个属性会作为下面六种 Vue<br>内置的 CSS 过渡类的类名前缀，在样式表中探测是否存在这种格式的类，并在适当的时机为包裹<br>元素添加相应的类名。这六种过渡类分别是：  </p>
+<ol>
+<li><code>v-enter</code> : 定义了<strong>进入</strong>过渡的开始状态，也就是这个组件被插入之前的 class 类，这个class<br>在元素被插入之后的下一帧移除。  </li>
+<li><code>v-enter-active</code> ：定义了<strong>进入</strong>过渡生效时的状态，这个 class 类在整个过渡过程的时候生<br>效，在过渡 / 动画完成后移除。这个类通常被用来设置过渡的效果，例如过渡时间，过渡<br>曲线等，动画类似。</li>
+<li><code>v-enter-to</code> : 定义了<strong>进入</strong>过渡的结束状态。在元素被插入的下一帧生效，在过渡 / 动画完成<br>时候移除。</li>
+<li><code>v-leave</code> : 定义了<strong>离开</strong>过渡的开始状态，对应 <code>v-enter-to</code> 的状态，在离开过渡触发生效，<br>下一帧被移除。</li>
+<li><code>v-leave-active</code> ：定义了<strong>离开</strong>过渡的生效状态，同 <code>v-enter-active</code>。</li>
+<li><code>v-leave-to</code> : 定义了<strong>离开</strong>过渡的结束状态，同 <code>v-enter</code>。</li>
+</ol>
+<p>下图展示了这六种 class 类的在整个过渡过程的生效时间：  </p>
+<p><img src="/yukino-blog/images/transition.png" alt="transition"></p>
+<p>需要注意的是，  </p>
+<ol>
+<li>这里的 v 前缀是当 <code>transition</code> 组件没有定义 <code>name</code> 属性的时候默认的。<br>当定义了 <code>name</code> 属性的时候，这个 v 会被替换为 <code>name</code> 所定义的内容。</li>
+<li>css 动画的使用和过渡类似，唯一的区别是 <code>v-enter</code> 类名再节点被插入<br>时候不会被立即删除，而是在 <code>animationend</code> 事件触发的时候被删除。</li>
+</ol>
+<h3 id="自定义过渡的类名"><a href="#自定义过渡的类名" class="headerlink" title="自定义过渡的类名"></a><strong>自定义过渡的类名</strong></h3><p>当想要使用第三方 css 类库的时候，我们可以定义 <code>transition</code> 组件的内联样式属性：  </p>
+<ul>
+<li><code>enter-class</code></li>
+<li><code>enter-active-class</code></li>
+<li><code>enter-to-class</code></li>
+<li><code>leave-class</code></li>
+<li><code>leave-active-class</code></li>
+<li><code>leave-to-class</code></li>
+</ul>
+<p>这六个作为 <code>transition</code> 组件的属性具有最高优先级，可以和 Vue 的过渡系统结合起来。</p>
+<h3 id="同时使用过渡和动画"><a href="#同时使用过渡和动画" class="headerlink" title="同时使用过渡和动画"></a><strong>同时使用过渡和动画</strong></h3><p>当想要给过渡或者动画添加事件监听机制的时候，需要给 <code>transition</code> 组件添加相应的事<br>件监听器，过渡—— <code>transitionend</code>, 动画—— <code>animationend</code>。Vue 会根据具体的 CSS<br>识别并添加监听器。  </p>
+<p>当同时使用这两种效果的时候。 需要在 <code>transition</code> 组件明确指定 <code>type</code> 这个属性并设置<br><code>transition</code> 或者 <code>animation</code> 来区分这两种动效。</p>
+<h3 id="多个元素（组件）的过渡"><a href="#多个元素（组件）的过渡" class="headerlink" title="多个元素（组件）的过渡"></a><strong>多个元素（组件）的过渡</strong></h3><p>当一个 <code>transition</code> 组件包含多个元素（组件）的时候，且这些元素（组件）在同一时间<br>只渲染一个的时候，可以在 <code>transition</code> 组件中使用 <code>v-if</code>, <code>v-else</code>, 控制元素的渲染，用<br>动态组件控制组件的渲染。  </p>
+<p>需要注意的是这些元素（组件）的切换的时候，它们的渲染模式在默认情况下是进入状态<br>和离开状态同时发生。这在某些情况下可能达不到预期的效果， Vue 提供了过渡模式，让<br>两个组件的渲染过渡拥有先后次序：  </p>
+<ul>
+<li><code>in-out</code> : 新元素先进行过渡，过渡完成后当前元素过渡离开</li>
+<li><code>out-in</code> : 当前元素先进行过渡，过渡完成后新元素过渡进入  </li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/yukino-blog/tags/Vue-Motion/" rel="tag"># Vue Motion</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/yukino-blog/2020/01/20/vue/vuebase/vue%E6%8C%87%E4%BB%A4/" rel="prev" title="Vue 指令">
+      <i class="fa fa-chevron-left"></i> Vue 指令
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#动画和过度"><span class="nav-number">1.</span> <span class="nav-text">动画和过度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#组件的过渡"><span class="nav-number">1.1.</span> <span class="nav-text">组件的过渡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义过渡的类名"><span class="nav-number">1.1.1.</span> <span class="nav-text">自定义过渡的类名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同时使用过渡和动画"><span class="nav-number">1.1.2.</span> <span class="nav-text">同时使用过渡和动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多个元素（组件）的过渡"><span class="nav-number">1.1.3.</span> <span class="nav-text">多个元素（组件）的过渡</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yukino Li</p>
+  <div class="site-description" itemprop="description">a blogging site to log my study and life</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/yukino-blog/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/yukino-blog/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/yukino-blog/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BigtigerGG" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BigtigerGG" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1602006646@qq.com" title="E-Mail → mailto:1602006646@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yukino Li</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/yukino-blog/lib/anime.min.js"></script>
+  <script src="/yukino-blog/lib/velocity/velocity.min.js"></script>
+  <script src="/yukino-blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/yukino-blog/js/utils.js"></script>
+
+<script src="/yukino-blog/js/motion.js"></script>
+
+
+<script src="/yukino-blog/js/schemes/muse.js"></script>
+
+
+<script src="/yukino-blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/yukino-blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
