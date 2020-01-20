@@ -49,16 +49,17 @@
   <meta name="description" content="深入了解组件这篇文章记录组件的高级知识，和自己对组件的总结。 组件的注册&amp;emsp;&amp;emsp;组件的注册包括全局注册和局部注册两种。  全局注册     即通过 Vue.component({&#x2F;\*\*...\*\*&#x2F;}) 来注册组件。  全局注册的组件可用于任何新创建的 Vue 实例，也包括组件之间相互的使用。  局部注册     全局注册的组件，即便不想使用这个组件，它任然会包含在构建结果中">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入了解 Vue 组件">
-<meta property="og:url" content="https://bigtigergg.github.io/yukino-blog/2020/01/20/advanced-comopent/index.html">
+<meta property="og:url" content="https://bigtigergg.github.io/yukino-blog/2020/01/20/:category/:title/index.html">
 <meta property="og:site_name" content="Yukino&#39;s Blog">
 <meta property="og:description" content="深入了解组件这篇文章记录组件的高级知识，和自己对组件的总结。 组件的注册&amp;emsp;&amp;emsp;组件的注册包括全局注册和局部注册两种。  全局注册     即通过 Vue.component({&#x2F;\*\*...\*\*&#x2F;}) 来注册组件。  全局注册的组件可用于任何新创建的 Vue 实例，也包括组件之间相互的使用。  局部注册     全局注册的组件，即便不想使用这个组件，它任然会包含在构建结果中">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-01-20T14:57:25.000Z">
-<meta property="article:modified_time" content="2020-01-20T14:58:01.108Z">
+<meta property="article:modified_time" content="2020-01-20T15:28:43.118Z">
 <meta property="article:author" content="Yukino Li">
+<meta property="article:tag" content="Vue Component">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/advanced-comopent/">
+<link rel="canonical" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/:category/:title/">
 
 
 <script id="page-configurations">
@@ -149,6 +150,11 @@
     <a href="/yukino-blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
 
   </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/yukino-blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/yukino-blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
@@ -210,7 +216,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/advanced-comopent/">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/:category/:title/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
@@ -234,7 +240,24 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-01-20 22:57:25 / 修改时间：22:58:01" itemprop="dateCreated datePublished" datetime="2020-01-20T22:57:25+08:00">2020-01-20</time>
+              <time title="创建时间：2020-01-20 22:57:25 / 修改时间：23:28:43" itemprop="dateCreated datePublished" datetime="2020-01-20T22:57:25+08:00">2020-01-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/Vue-Base/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue Base</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -402,9 +425,17 @@ new Vue({
     components: {
         &quot;todo-list&quot;: todoList
     }
-});</code></pre><p>###<br>    // 在父级组件中访问这个插槽 prop，根据 isCompleted 的值来条件渲染<br>    <div id="component-slot-prop"><br>    <!-- 这里使用解构对象给 v-slot 指令赋值 --><br>        <todo-list v-slot="{ todo }"
-                   :todo-items="todoItems"><br>            <span v-if="todo.isCompleted"> ✔ </span><br>            <br>        </todo-list><br>    </div></p>
-<p><strong>注：</strong><br>作用域插槽的更多用法 ==&gt; <a href="https://github.com/Akryum/vue-virtual-scroller" target="_blank" rel="noopener" title="一个基于 Vue 的虚拟滑动器，旨在提高性能">Vue Virtural Scroller</a></p>
+});
+
+// 在父级组件中访问这个插槽 prop，根据 isCompleted 的值来条件渲染
+&lt;div id=&quot;component-slot-prop&quot;&gt;
+&lt;!-- 这里使用解构对象给 v-slot 指令赋值 --&gt;
+    &lt;todo-list v-slot=&quot;{ todo }&quot;
+               :todo-items=&quot;todoItems&quot;&gt;
+        &lt;span v-if=&quot;todo.isCompleted&quot;&gt; ✔ &lt;/span&gt;
+        {{todo.title}}
+    &lt;/todo-list&gt;
+&lt;/div&gt;</code></pre><p><strong>注：</strong><br>作用域插槽的更多用法 ==&gt; <a href="https://github.com/Akryum/vue-virtual-scroller" target="_blank" rel="noopener" title="一个基于 Vue 的虚拟滑动器，旨在提高性能">Vue Virtural Scroller</a></p>
 <h2 id="动态组件-amp-异步组件"><a href="#动态组件-amp-异步组件" class="headerlink" title="动态组件 &amp; 异步组件"></a><strong>动态组件 &amp; 异步组件</strong></h2><p>当我们想要根据条件，动态渲染某一个组件的时候，可以使用 Vue 提供的<br>动态组件功能。例如，当我们选择一个导航栏标题的时候，内容区域根据标<br>题的不同使用不同的组件。</p>
 <p>具体的做法是使用一个 Vue 提供的内置组件 <code>&lt;component&gt;</code>，在这个组件上使<br>用 <code>v-bind:is</code> 指令来选择不同的组件。</p>
 <p>例如一个组件的模板是这样的：</p>
@@ -482,11 +513,21 @@ template： `
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/yukino-blog/tags/Vue-Component/" rel="tag"># Vue Component</a>
+          </div>
 
         
 
 
         
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/yukino-blog/2020/01/20/:category/:title/" rel="next" title="Vue 实例">
+      Vue 实例 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
     
   </article>
@@ -559,9 +600,17 @@ template： `
       <div class="site-state-item site-state-posts">
           <a href="/yukino-blog/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span>
       </div>
   </nav>
 </div>

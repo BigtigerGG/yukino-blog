@@ -147,6 +147,11 @@
     <a href="/yukino-blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
 
   </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/yukino-blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/yukino-blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
@@ -208,7 +213,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/advanced-comopent/">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/:category/:title/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
@@ -222,7 +227,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/yukino-blog/2020/01/20/advanced-comopent/" class="post-title-link" itemprop="url">深入了解 Vue 组件</a>
+            <a href="/yukino-blog/2020/01/20/:category/:title/" class="post-title-link" itemprop="url">动画和过渡</a>
         </h1>
 
         <div class="post-meta">
@@ -233,7 +238,375 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-01-20 22:57:25 / 修改时间：22:58:01" itemprop="dateCreated datePublished" datetime="2020-01-20T22:57:25+08:00">2020-01-20</time>
+              <time title="创建时间：2020-01-20 23:31:25 / 修改时间：23:33:03" itemprop="dateCreated datePublished" datetime="2020-01-20T23:31:25+08:00">2020-01-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/Vue-Base/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue Base</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="动画和过度"><a href="#动画和过度" class="headerlink" title="动画和过度"></a>动画和过度</h1><p>这篇文章记录了 Vue 对动画和过度效果的支持，同时记录了我的一些理解</p>
+<h2 id="组件的过渡"><a href="#组件的过渡" class="headerlink" title="组件的过渡"></a><strong>组件的过渡</strong></h2><p>Vue 提供了 <code>transition</code> 内置组件用于下列情形的任意元素的过渡：</p>
+<ul>
+<li>条件渲染（<code>v-if</code>)</li>
+<li>条件展示（<code>v-show</code>)</li>
+<li>动态组件（被 <code>component</code> 包裹的组件）</li>
+<li>组件根节点</li>
+</ul>
+<p>被 <code>transition</code> 组件包裹的组件在插入或者删除的时候，Vue 会做下述护理：  </p>
+<ol>
+<li><p>自动探测 <code>transition</code> 组件是否应用了 css过渡或者动画，如果是，则在恰当的时机<br>添加或者删除相应的 class 类</p>
+</li>
+<li><p>如果过渡组件提供了相应的 Javascript 钩子函数，这些钩子函数会在恰当的时机被调用  </p>
+</li>
+<li><p>如果没有上述两种情况，则 DOM 操作会在下一帧立即执行，也就是说没有过渡的效果</p>
+</li>
+</ol>
+<p>使用 <code>transition</code> 组件的方法是给这个组件定义一个 name 属性，这个属性会作为下面六种 Vue<br>内置的 CSS 过渡类的类名前缀，在样式表中探测是否存在这种格式的类，并在适当的时机为包裹<br>元素添加相应的类名。这六种过渡类分别是：  </p>
+<ol>
+<li><code>v-enter</code> : 定义了<strong>进入</strong>过渡的开始状态，也就是这个组件被插入之前的 class 类，这个class<br>在元素被插入之后的下一帧移除。  </li>
+<li><code>v-enter-active</code> ：定义了<strong>进入</strong>过渡生效时的状态，这个 class 类在整个过渡过程的时候生<br>效，在过渡 / 动画完成后移除。这个类通常被用来设置过渡的效果，例如过渡时间，过渡<br>曲线等，动画类似。</li>
+<li><code>v-enter-to</code> : 定义了<strong>进入</strong>过渡的结束状态。在元素被插入的下一帧生效，在过渡 / 动画完成<br>时候移除。</li>
+<li><code>v-leave</code> : 定义了<strong>离开</strong>过渡的开始状态，对应 <code>v-enter-to</code> 的状态，在离开过渡触发生效，<br>下一帧被移除。</li>
+<li><code>v-leave-active</code> ：定义了<strong>离开</strong>过渡的生效状态，同 <code>v-enter-active</code>。</li>
+<li><code>v-leave-to</code> : 定义了<strong>离开</strong>过渡的结束状态，同 <code>v-enter</code>。</li>
+</ol>
+<p>下图展示了这六种 class 类的在整个过渡过程的生效时间：  </p>
+<p><img src="/images/transition.png" alt="transition"></p>
+<p>需要注意的是，  </p>
+<ol>
+<li>这里的 v 前缀是当 <code>transition</code> 组件没有定义 <code>name</code> 属性的时候默认的。<br>当定义了 <code>name</code> 属性的时候，这个 v 会被替换为 <code>name</code> 所定义的内容。</li>
+<li>css 动画的使用和过渡类似，唯一的区别是 <code>v-enter</code> 类名再节点被插入<br>时候不会被立即删除，而是在 <code>animationend</code> 事件触发的时候被删除。</li>
+</ol>
+<h3 id="自定义过渡的类名"><a href="#自定义过渡的类名" class="headerlink" title="自定义过渡的类名"></a><strong>自定义过渡的类名</strong></h3><p>当想要使用第三方 css 类库的时候，我们可以定义 <code>transition</code> 组件的内联样式属性：  </p>
+<ul>
+<li><code>enter-class</code></li>
+<li><code>enter-active-class</code></li>
+<li><code>enter-to-class</code></li>
+<li><code>leave-class</code></li>
+<li><code>leave-active-class</code></li>
+<li><code>leave-to-class</code></li>
+</ul>
+<p>这六个作为 <code>transition</code> 组件的属性具有最高优先级，可以和 Vue 的过渡系统结合起来。</p>
+<h3 id="同时使用过渡和动画"><a href="#同时使用过渡和动画" class="headerlink" title="同时使用过渡和动画"></a><strong>同时使用过渡和动画</strong></h3><p>当想要给过渡或者动画添加事件监听机制的时候，需要给 <code>transition</code> 组件添加相应的事<br>件监听器，过渡—— <code>transitionend</code>, 动画—— <code>animationend</code>。Vue 会根据具体的 CSS<br>识别并添加监听器。  </p>
+<p>当同时使用这两种效果的时候。 需要在 <code>transition</code> 组件明确指定 <code>type</code> 这个属性并设置<br><code>transition</code> 或者 <code>animation</code> 来区分这两种动效。</p>
+<h3 id="多个元素（组件）的过渡"><a href="#多个元素（组件）的过渡" class="headerlink" title="多个元素（组件）的过渡"></a><strong>多个元素（组件）的过渡</strong></h3><p>当一个 <code>transition</code> 组件包含多个元素（组件）的时候，且这些元素（组件）在同一时间<br>只渲染一个的时候，可以在 <code>transition</code> 组件中使用 <code>v-if</code>, <code>v-else</code>, 控制元素的渲染，用<br>动态组件控制组件的渲染。  </p>
+<p>需要注意的是这些元素（组件）的切换的时候，它们的渲染模式在默认情况下是进入状态<br>和离开状态同时发生。这在某些情况下可能达不到预期的效果， Vue 提供了过渡模式，让<br>两个组件的渲染过渡拥有先后次序：  </p>
+<ul>
+<li><code>in-out</code> : 新元素先进行过渡，过渡完成后当前元素过渡离开</li>
+<li><code>out-in</code> : 当前元素先进行过渡，过渡完成后新元素过渡进入  </li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/:category/:title/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
+      <meta itemprop="name" content="Yukino Li">
+      <meta itemprop="description" content="a blogging site to log my study and life">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yukino's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/yukino-blog/2020/01/20/:category/:title/" class="post-title-link" itemprop="url">Vue 指令</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-01-20 23:30:25 / 修改时间：23:31:55" itemprop="dateCreated datePublished" datetime="2020-01-20T23:30:25+08:00">2020-01-20</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Vue指令"><a href="#Vue指令" class="headerlink" title="Vue指令"></a>Vue指令</h1><p><strong>每学习一个指令，将其用法和自己的理解记录下来</strong></p>
+<h2 id="v-bind"><a href="#v-bind" class="headerlink" title="v-bind"></a><strong>v-bind</strong></h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a><strong>概述</strong></h3><p><code>v-bind</code> 指令是一个用于将 vue 实例中的数据属性或者prop动态地和 html 标签中的属性绑定<br>起来。当 vue 实例中的数据属性发生改变时，html 标签中的属性也会响应式的变化。  </p>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a><strong>用法</strong></h3><ul>
+<li><p>缩写： <code>:</code></p>
+</li>
+<li><p>参数： <code>attr | prop</code></p>
+</li>
+<li><p>修饰符：  </p>
+<ul>
+<li><code>.prop</code> 待续</li>
+<li><code>.camel</code> 待续</li>
+<li><code>.sync</code> 待续</li>
+</ul>
+</li>
+<li><p>说明：<br>  动态的绑定一个或多个属性，或用一个prop到表达式。  </p>
+<p>  在绑定 <code>style</code> 或 <code>class</code> 特性时，支持其它类型的值，如数组或者对象。 </p>
+<p>  在绑定prop时，prop必须在子组件中声明。可以用修饰符指定不同的绑定类型。  </p>
+<p>  没有参数时，可以绑定一个包含键值对的对象。**注意，此时 <code>class</code> 和 <code>style</code> 绑定不支持数组或者对象。  </p>
+<p>  <em>下面是我自己的理解：</em>  </p>
+<ul>
+<li>动态绑定一个属性的时候，将null值作为参数，将会取消这个绑定事件。</li>
+</ul>
+</li>
+<li><p>示例  </p>
+<pre><code>&lt;!-- 绑定一个属性 --&gt;
+&lt;img v-bind:src=&quot;imageSrc&quot;&gt;
+
+&lt;!-- 动态特性名 (2.6.0+) --&gt;
+&lt;button v-bind:[key]=&quot;value&quot;&gt;&lt;/button&gt;
+
+&lt;!-- 缩写 --&gt;
+&lt;img :src=&quot;imageSrc&quot;&gt;
+
+&lt;!-- 动态特性名缩写 (2.6.0+) --&gt;
+&lt;button :[key]=&quot;value&quot;&gt;&lt;/button&gt;
+
+&lt;!-- 内联字符串拼接 --&gt;
+&lt;img :src=&quot;&apos;/path/to/images/&apos; + fileName&quot;&gt;
+
+&lt;!-- class 绑定 --&gt;
+&lt;div :class=&quot;{ red: isRed }&quot;&gt;&lt;/div&gt;
+&lt;div :class=&quot;[classA, classB]&quot;&gt;&lt;/div&gt;
+&lt;div :class=&quot;[classA, { classB: isB, classC: isC }]&quot;&gt;
+
+&lt;!-- style 绑定 --&gt;
+&lt;div :style=&quot;{ fontSize: size + &apos;px&apos; }&quot;&gt;&lt;/div&gt;
+&lt;div :style=&quot;[styleObjectA, styleObjectB]&quot;&gt;&lt;/div&gt;
+
+&lt;!-- 绑定一个有属性的对象 --&gt;
+&lt;div v-bind=&quot;{ id: someProp, &apos;other-attr&apos;: otherProp }&quot;&gt;&lt;/div&gt;
+
+&lt;!-- 通过 prop 修饰符绑定 DOM 属性 --&gt;
+&lt;div v-bind:text-content.prop=&quot;text&quot;&gt;&lt;/div&gt;
+
+&lt;!-- prop 绑定。“prop”必须在 my-component 中声明。--&gt;
+&lt;my-component :prop=&quot;someThing&quot;&gt;&lt;/my-component&gt;
+
+&lt;!-- 通过 $props 将父组件的 props 一起传给子组件 --&gt;
+&lt;child-component v-bind=&quot;$props&quot;&gt;&lt;/child-component&gt;
+
+&lt;!-- XLink --&gt;
+&lt;svg&gt;&lt;a :xlink:special=&quot;foo&quot;&gt;&lt;/a&gt;&lt;/svg&gt;</code></pre></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/:category/:title/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
+      <meta itemprop="name" content="Yukino Li">
+      <meta itemprop="description" content="a blogging site to log my study and life">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yukino's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/yukino-blog/2020/01/20/:category/:title/" class="post-title-link" itemprop="url">Vue 实例</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-01-20 23:21:25 / 修改时间：23:31:04" itemprop="dateCreated datePublished" datetime="2020-01-20T23:21:25+08:00">2020-01-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/Vue-Base/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue Base</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Vue-实例"><a href="#Vue-实例" class="headerlink" title="Vue 实例"></a>Vue 实例</h1><h2 id="创建一个-Vue-实例"><a href="#创建一个-Vue-实例" class="headerlink" title="创建一个 Vue 实例"></a>创建一个 Vue 实例</h2><p>每一个 Vue 应用都是通过 <code>Vue</code> 函数创建一个新的 Vue 实例开始的  </p>
+<pre><code>var vm = new Vue({
+    // 选项
+});  </code></pre><p>当创建一个 Vue 实例时，可以传入一个选项对象。<br>每一个 Vue 应用通过 <code>new Vue</code> 创建的<strong>根 Vue 实例</strong>，以及可选的，嵌套的、可复用的<em>组件</em> 树<br>组成。</p>
+<h2 id="数据与方法"><a href="#数据与方法" class="headerlink" title="数据与方法"></a>数据与方法</h2><h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>数据作为一个 Vue 实例的属性，当这个属性被改变时，视图将会产生响应(也就是同步的改变)，因为这个属性被加入到了 Vue 的响应式系统中了。</p>
+<p>为一个 Vue 实例添加数据的方式如下:  </p>
+<pre><code>var vm = new Vue({
+    data: {
+        msg: &quot;hello vue!&quot;
+    }
+});</code></pre><p>这样就为 vm 这个 Vue 实例添加了一个属性名为 msg 的数据，他的值为 “hello vue” 。</p>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>方法作为一个 vue 实例的方法，通过在 vue 实例中定义它们，就可以在一些需要动态改变数据的地方用<br>到这些方法</p>
+<p>为一个 Vue 实例添加方法的方式如下：</p>
+<pre><code>var vm = new Vue({
+    data: {
+        msg: &quot;hello vue&quot;
+    },
+    methods: {
+        reverseMsg: function(){
+            this.msg = this.msg.split(&apos;&apos;).reverse().join(&apos;&apos;);
+        }
+    }
+});</code></pre><p>这里为 vm 这个 vue 实例添加了一个 <code>reverseMsg</code> 的方法,  这个方法将实例中的msg属性这个字符串反<br>转了</p>
+<blockquote>
+<p><strong><font color='red' size='4'>注意</font></strong><br>不要在选项属性或回调上使用箭头函数，比如 <code>created: () =&gt; console.log(this.a)</code><br>或 <code>vm.$watch(&#39;a&#39;, newValue =&gt; this.myMethod())</code>。因为箭头函数并没有 <code>this</code>，<br><code>this</code> 会作为变量一直向上级词法作用域查找，直至找到为止，经常导致 <code>Uncaught   
+TypeError: Cannot read property of undefined</code>或 <code>Uncaught TypeError:  
+this.myMethod is not a function</code> 之类的错误。</p>
+</blockquote>
+<h2 id="Vue-实例的生命周期"><a href="#Vue-实例的生命周期" class="headerlink" title="Vue  实例的生命周期"></a>Vue  实例的生命周期</h2><p><img src="/images/vue-instance-lifecycle.png" alt="Vue实例生命周期示意图"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/2020/01/20/:category/:title/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
+      <meta itemprop="name" content="Yukino Li">
+      <meta itemprop="description" content="a blogging site to log my study and life">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yukino's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/yukino-blog/2020/01/20/:category/:title/" class="post-title-link" itemprop="url">深入了解 Vue 组件</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-01-20 22:57:25 / 修改时间：23:28:43" itemprop="dateCreated datePublished" datetime="2020-01-20T22:57:25+08:00">2020-01-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/Vue-Base/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue Base</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -401,9 +774,17 @@ new Vue({
     components: {
         &quot;todo-list&quot;: todoList
     }
-});</code></pre><p>###<br>    // 在父级组件中访问这个插槽 prop，根据 isCompleted 的值来条件渲染<br>    <div id="component-slot-prop"><br>    <!-- 这里使用解构对象给 v-slot 指令赋值 --><br>        <todo-list v-slot="{ todo }"
-                   :todo-items="todoItems"><br>            <span v-if="todo.isCompleted"> ✔ </span><br>            <br>        </todo-list><br>    </div></p>
-<p><strong>注：</strong><br>作用域插槽的更多用法 ==&gt; <a href="https://github.com/Akryum/vue-virtual-scroller" target="_blank" rel="noopener" title="一个基于 Vue 的虚拟滑动器，旨在提高性能">Vue Virtural Scroller</a></p>
+});
+
+// 在父级组件中访问这个插槽 prop，根据 isCompleted 的值来条件渲染
+&lt;div id=&quot;component-slot-prop&quot;&gt;
+&lt;!-- 这里使用解构对象给 v-slot 指令赋值 --&gt;
+    &lt;todo-list v-slot=&quot;{ todo }&quot;
+               :todo-items=&quot;todoItems&quot;&gt;
+        &lt;span v-if=&quot;todo.isCompleted&quot;&gt; ✔ &lt;/span&gt;
+        {{todo.title}}
+    &lt;/todo-list&gt;
+&lt;/div&gt;</code></pre><p><strong>注：</strong><br>作用域插槽的更多用法 ==&gt; <a href="https://github.com/Akryum/vue-virtual-scroller" target="_blank" rel="noopener" title="一个基于 Vue 的虚拟滑动器，旨在提高性能">Vue Virtural Scroller</a></p>
 <h2 id="动态组件-amp-异步组件"><a href="#动态组件-amp-异步组件" class="headerlink" title="动态组件 &amp; 异步组件"></a><strong>动态组件 &amp; 异步组件</strong></h2><p>当我们想要根据条件，动态渲染某一个组件的时候，可以使用 Vue 提供的<br>动态组件功能。例如，当我们选择一个导航栏标题的时候，内容区域根据标<br>题的不同使用不同的组件。</p>
 <p>具体的做法是使用一个 Vue 提供的内置组件 <code>&lt;component&gt;</code>，在这个组件上使<br>用 <code>v-bind:is</code> 指令来选择不同的组件。</p>
 <p>例如一个组件的模板是这样的：</p>
@@ -555,9 +936,17 @@ template： `
       <div class="site-state-item site-state-posts">
           <a href="/yukino-blog/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span>
       </div>
   </nav>
 </div>
