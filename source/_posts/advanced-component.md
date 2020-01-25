@@ -6,7 +6,6 @@ tags:
 categories:
 - Vue
 - Vue Base
-permalink: /vue/vuebase/深入了解vue组件
 ---
 
 # **深入了解组件**

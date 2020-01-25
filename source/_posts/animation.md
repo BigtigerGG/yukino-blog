@@ -6,7 +6,6 @@ tags:
 categories:
 - Vue
 - Vue Base
-permalink: /vue/vuebase/动画和过渡
 ---
 # 动画和过度
 

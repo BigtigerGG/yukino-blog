@@ -6,12 +6,11 @@ tags:
 categories:
 - Vue 
 - Vue Base
-- permalink: /vue/vuebase/Vue组件基础
 ---
 
 # 组件
 
-这篇文章概述了 Vue 的组件使用基础。更深入的组件了解 ==> {% post_link advanced-comopent.md '<b>深入了解Vue组件</b> false %}。
+这篇文章概述了 Vue 的组件使用基础。更深入的组件了解 ==> [**深入了解 Vue 组件**](/yukino-blog/Vue/Vue-Base/advanced-component/)
 
 ## 基本介绍
 

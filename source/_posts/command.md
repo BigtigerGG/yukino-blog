@@ -6,7 +6,6 @@ tags:
 catagories:
 - Vue
 - Vue Base
-permalink: /vue/vuebase/vue指令
 ---
 # Vue指令  
 

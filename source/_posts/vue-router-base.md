@@ -6,7 +6,6 @@ tags:
 categories:
 - Vue 
 - Vue Router
-permalink: /vue/vuerouter/VueRouter基础
 ---
 
 # **基础**

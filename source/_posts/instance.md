@@ -6,7 +6,6 @@ tags:
 categories:
 - Vue
 - Vue Base
-permalink: /vue/vue-base/vue实例
 ---
 # Vue 实例  
   
