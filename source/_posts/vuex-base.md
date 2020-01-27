@@ -6,8 +6,7 @@ tags:
 categories:
 - Vue
 - Vuex
----  
-
+---
 # **Vuex 基础**
 
 这篇文章记录 Vue生态的状态管理模式—— Vuex，同时也记录了自我见解。  
