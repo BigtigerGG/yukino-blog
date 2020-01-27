@@ -18,7 +18,7 @@ categories:
 
 通常，在简单的 Vue 组件中，数据的流动方向是“单向的“。如下图所示：  
 
-![flow](img/flow.png)  
+![flow](images/flow.png)  
 
 单项数据流让 Vue 组件的可预测性，可维护性得到了保证。  
 
