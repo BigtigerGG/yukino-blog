@@ -213,7 +213,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/uncategorized/vuex-base/">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Vue/Vuex/vuex-base/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
@@ -227,7 +227,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/yukino-blog/uncategorized/vuex-base/" class="post-title-link" itemprop="url">vuex-base</a>
+            <a href="/yukino-blog/Vue/Vuex/vuex-base/" class="post-title-link" itemprop="url">Vuex 基础</a>
         </h1>
 
         <div class="post-meta">
@@ -237,7 +237,31 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-01-27 23:56:14" itemprop="dateCreated datePublished" datetime="2020-01-27T23:56:14+08:00">2020-01-27</time>
+              <time title="创建时间：2020-01-27 16:51:29" itemprop="dateCreated datePublished" datetime="2020-01-27T16:51:29+08:00">2020-01-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/Vuex/" itemprop="url" rel="index">
+                    <span itemprop="name">Vuex</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -251,18 +275,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <hr>
-<p>title: Vuex 基础<br>date: 2020/1/27 16:51:29<br>tags:</p>
-<ul>
-<li>Vuex<br>categories:</li>
-<li>Vue</li>
-<li>Vuex</li>
-</ul>
-<hr>
-<h1 id="Vuex-基础"><a href="#Vuex-基础" class="headerlink" title="Vuex 基础"></a><strong>Vuex 基础</strong></h1><p>这篇文章记录 Vue生态的状态管理模式—— Vuex，同时也记录了自我见解。  </p>
+          <h1 id="Vuex-基础"><a href="#Vuex-基础" class="headerlink" title="Vuex 基础"></a><strong>Vuex 基础</strong></h1><p>这篇文章记录 Vue生态的状态管理模式—— Vuex，同时也记录了自我见解。  </p>
 <h2 id="什么是状态管理模式"><a href="#什么是状态管理模式" class="headerlink" title="什么是状态管理模式"></a><strong>什么是状态管理模式</strong></h2><p>通常，<strong>一个 Vue 组件的数据被称为这个组件的状态</strong>，它是驱动应用的数据源。Vue 的视图，也就是模板以声明式的方式将这些状态映射到 DOM 中。同时，Vue 的响应式机制能够根据这些状态的不同将变换的数据在视图中也能得到变化。  </p>
 <p>通常，在简单的 Vue 组件中，数据的流动方向是“单向的“。如下图所示：  </p>
-<p><img src="images/flow.png" alt="flow">  </p>
+<p><img src="/yukino-blog/images/flow.png" alt="flow">  </p>
 <p>单项数据流让 Vue 组件的可预测性，可维护性得到了保证。  </p>
 <p>但是当组件之间需要共享一些状态的时候，单项数据流很容易被破坏：  </p>
 <ul>
@@ -424,7 +440,7 @@ computed: mapState([&apos;count&apos;])</code></pre></li>
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-27 23:56:14" itemprop="dateModified" datetime="2020-01-27T23:56:14+08:00">2020-01-27</time>
+                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -579,7 +595,7 @@ router.beforeEach((to, from, next)=&gt;{
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-27 23:56:14" itemprop="dateModified" datetime="2020-01-27T23:56:14+08:00">2020-01-27</time>
+                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -723,7 +739,7 @@ createElement(
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-27 23:56:14" itemprop="dateModified" datetime="2020-01-27T23:56:14+08:00">2020-01-27</time>
+                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1074,7 +1090,7 @@ const router = new VueRouter({
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-27 23:56:14" itemprop="dateModified" datetime="2020-01-27T23:56:14+08:00">2020-01-27</time>
+                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1204,7 +1220,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-27 23:56:14" itemprop="dateModified" datetime="2020-01-27T23:56:14+08:00">2020-01-27</time>
+                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1336,7 +1352,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-27 23:56:14" itemprop="dateModified" datetime="2020-01-27T23:56:14+08:00">2020-01-27</time>
+                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
               </span>
 
           
@@ -1463,7 +1479,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-27 23:56:14" itemprop="dateModified" datetime="2020-01-27T23:56:14+08:00">2020-01-27</time>
+                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1573,7 +1589,7 @@ this.myMethod is not a function</code> 之类的错误。</p>
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-27 23:56:14" itemprop="dateModified" datetime="2020-01-27T23:56:14+08:00">2020-01-27</time>
+                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1927,13 +1943,13 @@ template： `
       <div class="site-state-item site-state-categories">
             <a href="/yukino-blog/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/yukino-blog/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
