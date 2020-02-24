@@ -213,6 +213,114 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/RTTI&reflect/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
+      <meta itemprop="name" content="Yukino Li">
+      <meta itemprop="description" content="a blogging site to log my study and life">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yukino's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/yukino-blog/Java/Java-SE/RTTI&reflect/" class="post-title-link" itemprop="url">类型信息</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-25 11:54:49" itemprop="dateCreated datePublished" datetime="2020-02-25T11:54:49+08:00">2020-02-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Java/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="类型信息"><a href="#类型信息" class="headerlink" title="类型信息"></a><strong>类型信息</strong></h1><p><em>运行时的类型信息可以让我们知道在程序运行的时候发现和使用类型信息。</em>  </p>
+<p>Java 主要通过两种方式在运行的时候动态的获取对象和类的信息，即 “传统的” <strong>RTTI</strong> 和 <strong>反射</strong>。  </p>
+<h2 id="传统的-RTTI"><a href="#传统的-RTTI" class="headerlink" title="传统的 RTTI"></a><strong>传统的 RTTI</strong></h2><p>RTTI（Runtime-Type-Identification)，即运行时类型信息。设计 RTTI 的主要目的是实现<strong>多态</strong> 这一面向对象设计的重要概念。通常继承自基类的各种具体派生类对象被赋值给一个基类的引用的时候，使用这个基类引用能够根据运行时类型信息来调用各自重写的方法。  </p>
+<p>这样做的好处是当我们拓展这个基类的时候，可以在不用更改代码的前提下，实现一个新的方法调用。</p>
+<h2 id="实现RTTI的原理——Class-对象"><a href="#实现RTTI的原理——Class-对象" class="headerlink" title="实现RTTI的原理——Class 对象"></a><strong>实现RTTI的原理——Class 对象</strong></h2><p>在 Java 中，类型信息在运行时是通过一种被称为 <strong>Class</strong> 对象的特殊对象完成的，它包含了与类有关的信息。事实上，Class 对象就是用来创建类的所有常规对象的。  </p>
+<p>每一个类都有一个 Class 对象，也就是说，每当编译一个新类，就会产生一个 Class 对象（确切的说，是被保存在一个同名的 .class 文件中）。为了生成这个类的对象，运行这个程序的 Java 虚拟机将使用被称为 ”类加载器“（ClassLoader）的子系统。  </p>
+<p>类加载器子系统实际上可以包含多个类加载器链，但是只有一个原生类加载器，它是 JVM 的一个实现部分，他专门加载所谓的可信类，他们通常从本地盘中加载。当我们需要添加额外的类加载器时，例如以某种特殊的方式加载类来支持 Web 服务器应用，或者在网络上加载类），那么可以使用一种特殊的方式挂载额外的类加载器。 </p>
+<p>通常，我们使用 Class 对象来表述一个类的类型信息。Class 对象有很多实用的方法，它们被用来在运行时操作和使用类的类型信息。常用的方法有：  </p>
+<ul>
+<li><code>Class.forName(String)</code> ：被用来获取一个类的 Class 对象的引用，方法的参数是这个类的全限定名。一般作为静态方法使用。  </li>
+<li><code>classObj.newInstance()</code> : 用来获取一个该类型类的一个实例。它的成功运行的条件是指定的类需要能够被实例化（接口和抽象类除外），并且拥有一个默认的构造器。  </li>
+<li>其他方法待续 </li>
+</ul>
+<p>获得一个类的 Class 对象除了通过 <code>forName()</code> 方法，还可以通过类字面常量获取。即通过，类名.class 获取这个 Class 对象。这样做更加安全和简单，因为它在编译时就会受到检查。需要注意的是，通过这种方式获得的 Class 对象的引用并不会自动地初始化这个 Class 对象。  </p>
+<h3 id="泛化的-Class-引用"><a href="#泛化的-Class-引用" class="headerlink" title="泛化的 Class 引用"></a><strong>泛化的 Class 引用</strong></h3><p>Class 引用指向某个 Class 对象，它可以制造能够实例化的该类的对象实例。当结合 <em>泛型</em> 机制，Class 引用能够变得更加具体。通过泛型机制，Class 引用能够在编译器获得检查，让 Class 引用变得更加安全和方便使用。例如：  </p>
+<pre><code>Class clazz1 = int.class;
+Class&lt;Integer&gt; clazz2 = int.class;</code></pre><p>这两种 Class 引用都是正确的，但是前者并不能获得编译器的检查，因此它可以指向任意 Class 对象，后者限制性地只能指向 Integer 类的 Class 对象。 </p>
+<p>当想要放松这种限制的时候，可能会使用如下方式：  </p>
+<pre><code>Class&lt;Number&gt; clazz = int.class;</code></pre><p>但是这种方式是不正确的，它会在编译时就发生错误，即通不过编译。因为 Integer Class 并没有继承自 Number Class。</p>
+<p>通常，为了放松限制，我们使用 <code>?</code> 这一通配符来表示任意类型，并且搭配 <code>extends</code> 关键字使用，上面的例子可以这样写：  </p>
+<pre><code>Class&lt;? extends Number&gt; clazz = int.class;</code></pre><p>这样 clazz 这个引用就可以指向任意 <em>继承自 Number</em> 的 Class 对象。 </p>
+<h2 id="加载类的运行过程"><a href="#加载类的运行过程" class="headerlink" title="加载类的运行过程"></a><strong>加载类的运行过程</strong></h2><p>所有的类都是在对其第一次使用的时候，动态地加载到 JVM 中的。<strong>当程序创建第一个对类的静态成员的引用</strong>时，就会加载这个类。这个说法证明了构造方法也是类的静态方法，即使没有使用 <code>static</code> 关键字。因此，当我们使用 new 关键字在堆中创建一个该类的对象的时候，这个过程也会被当作对类的静态成员的引用。  </p>
+<p>由此可见，Java 程序在它开始运行之前并非完全加载，其各个部分的类当运行时需要使用时才动态的加载。这是 C++ 这种静态语言难以做到的。  </p>
+<p>当一个类的 Class 对象被加载到内存中时，这个对象就被用来创建这个类的所有普通对象。一个类的 static 代码块是在类加载的时候被调用的。  </p>
+<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a><strong>反射</strong></h2><p>通过 RTTI，可以知道某个对象的类型信息，也就是这个对象所属的类的 Class 对象。但是通过 RTTI 有一个限制：<strong>必须在编译期就已经确定这个对象所属的类</strong>。这使得通过 RTTI 来获取的类必须是在编译前本地已经被类加载器加载过的类，如果我们在运行期间通过网络获取一个未知类的字节码，我们是无法通过 RTTI 获取这个类的类型信息的。Java 允许我们通过 <strong>反射</strong> 在运行期间获取一个未知类的类型信息。  </p>
+<p>Class 类和 java.util.reflect 类库一起对反射提供了支持。这个类库包含了  <code>Field</code> 、<code>Method</code>、<code>Constructor</code> 类。这些类型的对象是由 JVM 在运行期间创建的，用来表示未知类对应的成员。这样我们可以使用 <code>Constructor</code> 创建新的对象，用 <code>get()</code> 和 <code>set()</code> 方法读取和修改 Field 对象关联的字段，用 <code>invoke()</code> 方法调用与 <code>Method</code> 对象关联的方法。这样，匿名对象的类信息在运行期间就被完全确定下来，而在编译器不需要任何信息。  </p>
+<p>反射与 RTTI 本质上并没有什么不同，它们都需要在获取类信息之前加载那个类的 Class 对象，因此那个类的 .class 文件是必须获取到的。它们的的不同之处在于 RTTI 在编译期就已经将那个类的 Class 对象加载了，而反射则是在运行期间获取并加载那个类的 Class 对象。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Vue/Vuex/vuex-base/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -244,7 +352,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -440,7 +548,7 @@ computed: mapState([&apos;count&apos;])</code></pre></li>
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -595,7 +703,7 @@ router.beforeEach((to, from, next)=&gt;{
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -739,7 +847,7 @@ createElement(
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1090,7 +1198,7 @@ const router = new VueRouter({
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1220,7 +1328,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1352,7 +1460,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
               </span>
 
           
@@ -1479,7 +1587,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1589,7 +1697,7 @@ this.myMethod is not a function</code> 之类的错误。</p>
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-01-28 00:07:31" itemprop="dateModified" datetime="2020-01-28T00:07:31+08:00">2020-01-28</time>
+                <time title="修改时间：2020-02-24 11:59:38" itemprop="dateModified" datetime="2020-02-24T11:59:38+08:00">2020-02-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1936,20 +2044,20 @@ template： `
       <div class="site-state-item site-state-posts">
           <a href="/yukino-blog/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">10</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/yukino-blog/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/yukino-blog/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
