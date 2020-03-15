@@ -213,6 +213,147 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/java-regex/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
+      <meta itemprop="name" content="Yukino Li">
+      <meta itemprop="description" content="a blogging site to log my study and life">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yukino's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/yukino-blog/Java/Java-SE/java-regex/" class="post-title-link" itemprop="url">java-regex</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-03-15 20:49:35 / 修改时间：22:57:00" itemprop="dateCreated datePublished" datetime="2020-03-15T20:49:35+08:00">2020-03-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Java/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>正则表达式是一个非常强大的工具，Java 对正则表达式的支持主要利用了 <code>java.util.regex</code> 中的一些类。</p>
+<h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><p>String 类的对象的成员方法利用了正则表达式来更灵活的处理字符串。  </p>
+<ol>
+<li><p><code>matches()</code> </p>
+<p>这个方法用来进行字符串的模式匹配，例如邮箱的匹配:  </p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">boolean</span> isMatch = <span class="string">"yukino@stu.cdut.edu.cn"</span>.matches(<span class="string">"\S+@[a-zA-Z]+(.[a-zA-Z]+)+"</span>);</span><br><span class="line">System.out.println(isMatch);</span><br><span class="line"><span class="comment">// expected output : true</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>split()</code> </p>
+<p>这个方法用来进行字符串的分割，按照正则表达式将一个字符串分割为一个数组。  </p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (String s : <span class="string">"Hello world"</span>.split(<span class="string">" "</span>)) &#123;</span><br><span class="line">  System.out.println(s)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// expected output :</span></span><br><span class="line"><span class="comment">// Hello </span></span><br><span class="line"><span class="comment">// world</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>replaceFirst()</code>, <code>replaceAll()</code> </p>
+<p>这个方法用来进行字符串的替换，前者只替换第一个匹配到的字符，后者则全部替换。</p>
+</li>
+</ol>
+<h2 id="模式类，匹配类（Pattern，Matcher）"><a href="#模式类，匹配类（Pattern，Matcher）" class="headerlink" title="模式类，匹配类（Pattern，Matcher）"></a>模式类，匹配类（Pattern，Matcher）</h2><p>Java 底层使用这个两个类来进行字符串的匹配的，基础用法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Pattern p = Pattern.compile(<span class="string">"[abc]+"</span>); <span class="comment">// 这里将一个正则表达式的字符串形式编译成一个 Pattern 对象</span></span><br><span class="line">Matcher m = p.matcher(<span class="string">"ababab"</span>); <span class="comment">// 这里用 p 返回一个指定要匹配的字符串的匹配器对象</span></span><br><span class="line"><span class="keyword">boolean</span> isMatch = m.matches(); <span class="comment">// 最后判断是否匹配</span></span><br><span class="line"></span><br><span class="line">isMatch = Pattern.matches(<span class="string">"[abc]+"</span>, <span class="string">"ababab"</span>); <span class="comment">// 这是更简单的做法，但是失去了灵活性</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h2><p>正则表达式中的量词描述了一个模式匹配文本的次数。</p>
+<p>常用的几种量词：</p>
+<table>
+<thead>
+<tr>
+<th align="center">量词</th>
+<th align="center">用例</th>
+<th align="center">用法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">?</td>
+<td align="center">[abc]?</td>
+<td align="center">匹配0个或1个模式</td>
+</tr>
+<tr>
+<td align="center">+</td>
+<td align="center">[abc]+</td>
+<td align="center">匹配1个或多个模式</td>
+</tr>
+<tr>
+<td align="center">*</td>
+<td align="center">[abc]*</td>
+<td align="center">匹配0个或多个模式</td>
+</tr>
+<tr>
+<td align="center">{n}</td>
+<td align="center">[abc]{2}</td>
+<td align="center">恰好n个模式</td>
+</tr>
+<tr>
+<td align="center">{n,}</td>
+<td align="center">[abc]{2,}</td>
+<td align="center">至少n个模式</td>
+</tr>
+<tr>
+<td align="center">{n,m}</td>
+<td align="center">[abc]{2,3}</td>
+<td align="center">至少n个，但不超过m个</td>
+</tr>
+</tbody></table>
+<p>量词在 Java 中有三种类型：</p>
+<ul>
+<li>贪婪型：量词总是贪婪的，除非有其他的选项被设置。贪婪表达式会为所有可能的模式发现尽可能多的匹配。也就是，这种匹配模式会导致匹配尽可能长的字符串。通常会导致一种问题：如果我们的模式仅能匹配第一个可能的字符组，如果它是贪婪的，那么他就会继续往下匹配。<br>例如，可能会想用”&lt;.+&gt;”去匹配“a&lt;tr&gt;aaa&lt;/tr&gt;“中的”&lt;tr&gt;“, 贪婪模式会导致匹配到”&lt;tr&gt;aaa&lt;/tr&gt;”。</li>
+<li>勉强型：用 ? 来指定，这种模式只会匹配模式所需要的最小字符数。</li>
+<li>占有型：用 + 来指定，这种模式是 Java 特有的，它可以避免匹配过程重的回溯，当匹配失败的时候就不再匹配了。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/RTTI&reflect/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -244,7 +385,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
+                <time title="修改时间：2020-03-15 22:57:00" itemprop="dateModified" datetime="2020-03-15T22:57:00+08:00">2020-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -352,7 +493,7 @@ Class&lt;Integer&gt; clazz2 = int.class;</code></pre><p>这两种 Class 引用�
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
+                <time title="修改时间：2020-03-15 22:57:00" itemprop="dateModified" datetime="2020-03-15T22:57:00+08:00">2020-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -548,7 +689,7 @@ computed: mapState([&apos;count&apos;])</code></pre></li>
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
+                <time title="修改时间：2020-03-15 22:57:00" itemprop="dateModified" datetime="2020-03-15T22:57:00+08:00">2020-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -703,7 +844,7 @@ router.beforeEach((to, from, next)=&gt;{
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
+                <time title="修改时间：2020-03-15 22:57:00" itemprop="dateModified" datetime="2020-03-15T22:57:00+08:00">2020-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -847,7 +988,7 @@ createElement(
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
+                <time title="修改时间：2020-03-15 22:57:00" itemprop="dateModified" datetime="2020-03-15T22:57:00+08:00">2020-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1198,7 +1339,7 @@ const router = new VueRouter({
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
+                <time title="修改时间：2020-03-15 22:57:00" itemprop="dateModified" datetime="2020-03-15T22:57:00+08:00">2020-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1328,7 +1469,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
+                <time title="修改时间：2020-03-15 22:57:00" itemprop="dateModified" datetime="2020-03-15T22:57:00+08:00">2020-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1460,7 +1601,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
+                <time title="修改时间：2020-03-15 22:57:00" itemprop="dateModified" datetime="2020-03-15T22:57:00+08:00">2020-03-15</time>
               </span>
 
           
@@ -1587,7 +1728,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
+                <time title="修改时间：2020-03-15 22:57:00" itemprop="dateModified" datetime="2020-03-15T22:57:00+08:00">2020-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1662,324 +1803,12 @@ this.myMethod is not a function</code> 之类的错误。</p>
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Vue/Vue-Base/advanced-component/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
-      <meta itemprop="name" content="Yukino Li">
-      <meta itemprop="description" content="a blogging site to log my study and life">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yukino's Blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/yukino-blog/Vue/Vue-Base/advanced-component/" class="post-title-link" itemprop="url">深入了解 Vue 组件</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-01-20 22:57:25" itemprop="dateCreated datePublished" datetime="2020-01-20T22:57:25+08:00">2020-01-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-15 15:03:05" itemprop="dateModified" datetime="2020-03-15T15:03:05+08:00">2020-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/yukino-blog/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
-                  </a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/yukino-blog/categories/Vue/Vue-Base/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue Base</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="深入了解组件"><a href="#深入了解组件" class="headerlink" title="深入了解组件"></a><strong>深入了解组件</strong></h1><p>这篇文章记录组件的高级知识，和自己对组件的总结。</p>
-<h2 id="组件的注册"><a href="#组件的注册" class="headerlink" title="组件的注册"></a><strong>组件的注册</strong></h2><p>&emsp;&emsp;组件的注册包括全局注册和局部注册两种。</p>
-<ul>
-<li><p>全局注册  </p>
-<p>  即通过 <code>Vue.component({/\*\*...\*\*/})</code> 来注册组件。<br>  全局注册的组件可用于任何新创建的 Vue 实例，也包括组件之间相互的使用。</p>
-</li>
-<li><p>局部注册  </p>
-<p>  全局注册的组件，即便不想使用这个组件，它任然会包含在构建结果中。这造成了<br>  用户下载的 JavaScript 的无谓的增加。<br>  通过使用局部组件，可以避免这个问题。局部注册的方法如下：  </p>
-<pre><code>// 通过使用变量，将组件的引用赋值给一个变量
-var ComponentA = { /\* ... \*/ }
-var ComponentB = { /\* ... \*/ }
-// 然后在一个 Vue 实例中的 components 定义你想使用的组件
-new Vue({
-    el: &quot;#app&quot;,
-    components: {
-        &apos;component-a&apos; : ComponentA,
-        &apos;component-b&apos; : ComponentB
-    }
-})</code></pre><p>  需要<strong>注意</strong>的是：  </p>
-<ul>
-<li>对于 <code>components</code> 对象中的每一个属性来说，其属性名就是自定<br>义元素的名字，其属性值就是某一个组件的变量名。</li>
-<li>局部注册的组件在其子组件中不可用。如果想要在子组件中使用，<br>需要在子组件中注册这个组件。 </li>
-</ul>
-</li>
-</ul>
-<h2 id="Prop"><a href="#Prop" class="headerlink" title="Prop"></a><strong>Prop</strong></h2><h3 id="prop-的类型"><a href="#prop-的类型" class="headerlink" title="prop 的类型"></a><strong>prop 的类型</strong></h3><p>通常prop的传递通过字符串数组的形式，比如这样：  </p>
-<pre><code>props:[&apos;prop1&apos;, &apos;prop2&apos;, &apos;prop3&apos;]</code></pre><p>但是，通常我们希望每一个 <code>prop</code> 都有自己指定值的类型。这时，我们可以用对象的形式<br>列出 <code>prop</code>，这些属性的名称和值分别是prop各自的名称和类型。这样也可以对 prop。<br>进行类型检查。例如：  </p>
-<pre><code>props: {
-    title: String,
-    likes: Number,
-    isPublished: Boolean
-}</code></pre><h3 id="prop-的传递应该是一个单向数据流"><a href="#prop-的传递应该是一个单向数据流" class="headerlink" title="prop 的传递应该是一个单向数据流"></a><strong>prop 的传递应该是一个单向数据流</strong></h3><p>所有的prop都使得其父子prop之间形成了一个<strong>单向下行绑定</strong>：父级prop的更新会向下流动<br>到子组件中，但是反过来却不行。这样能够防止从子组件意外改变父级组件的状态，从而<br>导致应用的数据流向难以理解。</p>
-<p>每次父级组件发生更新的时候，子组件中的所有prop都会刷新为最新的值。这意味着不应该<br>在一个子组件内部改变 prop。 </p>
-<h3 id="非-prop-的-Attribute"><a href="#非-prop-的-Attribute" class="headerlink" title="非 prop 的 Attribute"></a><strong>非 prop 的 Attribute</strong></h3><p>一个非 prop 的 Attribute 是指传向一个组件，但是该组件并没有相应 prop 定义的Attribute。<br>但是一个组件可以接受任意的 attribute ，<strong>而这个attribute会被添加到这个组件的根元素上</strong>。 </p>
-<h3 id="替换-合并已有的-attribute"><a href="#替换-合并已有的-attribute" class="headerlink" title="替换/合并已有的 attribute"></a><strong>替换/合并已有的 attribute</strong></h3><p>对于绝大数的 attribute，外部提供给组件的值会替换掉组件内部根元素设定好了的值。但是<br>style 和 class 属性会合并两个值。</p>
-<h3 id="禁用-attribute-继承"><a href="#禁用-attribute-继承" class="headerlink" title="禁用 attribute 继承"></a><strong>禁用 attribute 继承</strong></h3><p>当不希望一个组件内部的根元素(组件)继承外部的属性，那么可以将这个组件的 <code>inheritAttrs</code><br>属性设置为 <code>false</code>。例如：</p>
-<pre><code>Vue.component(&apos;demo-component&apos;, {
-    inheritAttrs: false,
-    template: /* ... */
-})</code></pre><p>这样书写给 <code>demo-component</code> 这个组件的属性就不会继承到它的子组件中。</p>
-<p>值得注意的是，这样做的好处在于：<br>当一个组件的模板嵌套着很多子组件时，我们不希望配置给这个组件的属性直接继承在这个组件<br>的根组件上，而是继承给某一个我们希望的子组件上面。 </p>
-<p>具体的做法是：  </p>
-<ol>
-<li>禁用属性继承（即 <code>inheritAttrs: false</code>）</li>
-<li>将组件的实例属性 <a href="https://cn.vuejs.org/v2/api/#vm-attrs" target="_blank" rel="noopener"><code>$attrs</code></a> , 绑定到指定的子组件或者元素上面  </li>
-</ol>
-<p>需要<strong>注意</strong>的是：  </p>
-<p><code>inheritAttrs: false</code> 并<strong>不会</strong>影响到 style 和 class 的绑定。也就是说，这两个属性<br>还是会绑定在模板的根元素（子组件）上面。</p>
-<h2 id="自定义事件"><a href="#自定义事件" class="headerlink" title="自定义事件"></a><strong>自定义事件</strong></h2><h3 id="事件名"><a href="#事件名" class="headerlink" title="事件名"></a><strong>事件名</strong></h3><p>不同于组件和prop，事件名不会存在任何的自动化的大小写转换，而是触发的事件名必须<br>完全匹配这个事件所用的名称。  </p>
-<p>建议始终使用短横线分割的小写标识符。</p>
-<h3 id="自定义组件的-v-model"><a href="#自定义组件的-v-model" class="headerlink" title="自定义组件的 v-model"></a><strong>自定义组件的 <code>v-model</code></strong></h3><p><code>v-model</code> 用在组件上面的时候，会默认利用名为 <code>value</code> 的 prop 和名为 <code>input</code> 的事件，<br>当使用一些像单选框，复选框这样的输入表单控件的时候，这个指令就达不到我们想要<br>的效果。这个时候，我们可以使用 Vue 实例中的 <code>model</code> 选项用来避免这样的冲突。<br>例如：  </p>
-<pre><code>Vue.component(&apos;base-checkbox&apos;, {
-    model: {
-        prop: &apos;checked&apos;,
-        event: &apos;change&apos;
-    },
-    props: {
-        checked: Boolean
-    },
-    template: `
-        &lt;input type=&quot;checkbox&quot;
-               :checked=&quot;checked&quot;
-               @change=&quot;$emit(&apos;change&apos;, $event.target.checked)&quot;
-        &gt;
-    `
-})</code></pre><p>这样当在 <code>base-checkbox</code> 这个组件上使用 <code>v-model</code> 的时候，将会创建一个和checked<br>双向绑定的响应式关系。</p>
-<h3 id="使用-listeners-属性将原生事件绑定到组件中"><a href="#使用-listeners-属性将原生事件绑定到组件中" class="headerlink" title="使用 $listeners 属性将原生事件绑定到组件中"></a><strong>使用 $listeners 属性将原生事件绑定到组件中</strong></h3><p>绑定原生 DOM 事件的方法是在 <code>v-on</code> 这个指令上面加上 <code>.native</code> 这个修饰符。<br>但是，当在一个组件上绑定一个原生事件并且组件内部尝试监听一个特定的元<br>素的时候，父级的 .native 监听器将会失败。Vue 不会报错，但是相应的事件处<br>理函数将不会执行。  </p>
-<p>这个时候，可以使用 Vue 提供的 $listeners 属性将组件上所有的事件监听器指<br>向这个组件上的指定元素。具体的方法是：</p>
-<pre><code>// 例如我们想要将一个组件上面的 focus 事件监听器指向这个组件内部的一个 input 元素
-Vue.component(&apos;base-input&apos;, {
-    inheritAttrs: false,
-    props: [&apos;input&apos;]
-    computed: {
-        inputListeners: function(){
-            let vm = this;
-            // 使用 Object.assign 方法将多个对象合并
-            return Object.assign({}, 
-                this.$listeners,
-                {
-                    input: function(){
-                        vm.$emit(&apos;input&apos;, $event.target.value);
-                    }
-                }
-            )
-        }
-    },
-    template: `
-        &lt;label&gt;
-            &lt;input type=&quot;text&quot;
-                   v-bind=&quot;$attrs&quot;
-                   :input=&quot;input&quot;
-                   v-on=&quot;inputListeners&quot;&gt;
-        &lt;/label&gt;
-    `
-})</code></pre><p>这样使用 <code>base-input</code> 就相当于使用普通的 <code>input</code> 了，也就是说，这个组件<br>已经是透明的了。</p>
-<h2 id="插槽"><a href="#插槽" class="headerlink" title="插槽"></a><strong>插槽</strong></h2><h3 id="插槽的基本使用"><a href="#插槽的基本使用" class="headerlink" title="插槽的基本使用"></a><strong>插槽的基本使用</strong></h3><p>当我们想要在一个组件中插入一段模板或者HTML的时候，可以使用 Vue 提供<br>的插槽机制。如果不使用插槽，并且在一个自定义组件中插入了一段模板或者<br>HTML的话，那么 Vue 将不会渲染这一部分的内容。</p>
-<p>插槽的具体使用方式如下：</p>
-<pre><code>// 假如这是一个名为 &lt;my-slot&gt; 组件的模板内容
-&lt;label&gt;
-    &lt;span&gt;你好&lt;/span&gt;
-    &lt;slot&gt;&lt;/slot&gt;
-&lt;/label&gt;</code></pre><p>###<br>可以像使用 html 元素一样使用这个组件</p>
-<pre><code>&lt;my-slot&gt;
-    Vue
-&lt;/my-slot&gt;</code></pre><h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>经过 Vue 渲染后的结果为：</p>
-<pre><code>你好Vue</code></pre><h3 id="具名插槽"><a href="#具名插槽" class="headerlink" title="具名插槽"></a><strong>具名插槽</strong></h3><p>当想要使用多个插槽的时候，可以在 <code>&lt;slot&gt;</code> 元素上面添加一个 <code>name</code> 特性，这个<br>特性可以作为识别这个插槽的标识。然后在具体使用这个模板的时候，使用 <code>v-slot</code><br>指令，将 name 作为这个指令的参数，作用在一个模板组件 <code>&lt;template&gt;</code> 上面。那<br>么这个模板的内容将被填充在这个插槽里面。未使用 name 特性的 <code>&lt;slot&gt;</code> 将会有<br>一个默认的 name —— default。未使用 <code>&lt;template&gt;</code> 的内容将会视作默认插槽的内<br>容。使用这种方式定义的插槽叫做<strong>具名插槽</strong>。</p>
-<p><strong>注：</strong><br>和其他可缩写指令一样，<code>v-slot</code> 指令可以缩写为 <code>#</code>, 但必须指定参数，也就是<br>说不能这样用：<code>#=</code></p>
-<h3 id="作用域插槽"><a href="#作用域插槽" class="headerlink" title="作用域插槽"></a><strong>作用域插槽</strong></h3><p>当想在父级组件作用域中使用子组件中作用域中的数据的时候，可以使用 Vue 提供的<br>作用域插槽的解决方案。<br>具体的使用方法如下：</p>
-<pre><code>// 假如在父级组件或者 rawHtml 中需要使用一个叫做 isCompleted 的属性
-// 这是子组件
-var todoList = {
-    props:{
-        todoItems: Array
-    },
-    computed: {
-        filteredTodoItems: function(){
-            return this.todoItems.filter(item =&gt; item.title);
-        }
-    },
-    // 绑定在&lt;slot&gt;标签中的特性被称为插槽 prop , 这个prop在父级作用域中
-    // 可以通过 v-slot 指令提供的插槽 prop 名字来访问
-    template: `
-        &lt;ul&gt;
-            &lt;li v-for=&quot;item of filteredTodoItems
-                :key=&quot;item.id&quot;&gt;
-                &lt;slot v-bind:todo=&quot;item&quot;&gt;
-                    {{item.title}}
-                &lt;/slot&gt;
-                &lt;input type=&quot;checkbox&quot; v-model=&quot;item.isCompleted&quot;&gt;
-            &lt;/li&gt;
-        &lt;/ul&gt;
-    `
-};
-
-new Vue({
-    el:&quot;#component-slot-prop&quot;,
-    data: {
-        todoItems: [
-            {
-                id: 0,
-                title: &quot;学习 Vue 的插槽用法&quot;,
-                isCompleted: false
-            },
-            {},
-            {
-                id: 3,
-                title: &quot;学习 JVM 的知识&quot;,
-                isCompleted: false
-            }
-        ]
-    },
-    components: {
-        &quot;todo-list&quot;: todoList
-    }
-});
-
-// 在父级组件中访问这个插槽 prop，根据 isCompleted 的值来条件渲染
-&lt;div id=&quot;component-slot-prop&quot;&gt;
-&lt;!-- 这里使用解构对象给 v-slot 指令赋值 --&gt;
-    &lt;todo-list v-slot=&quot;{ todo }&quot;
-               :todo-items=&quot;todoItems&quot;&gt;
-        &lt;span v-if=&quot;todo.isCompleted&quot;&gt; ✔ &lt;/span&gt;
-        {{todo.title}}
-    &lt;/todo-list&gt;
-&lt;/div&gt;</code></pre><p><strong>注：</strong><br>作用域插槽的更多用法 ==&gt; <a href="https://github.com/Akryum/vue-virtual-scroller" target="_blank" rel="noopener" title="一个基于 Vue 的虚拟滑动器，旨在提高性能">Vue Virtural Scroller</a></p>
-<h2 id="动态组件-amp-异步组件"><a href="#动态组件-amp-异步组件" class="headerlink" title="动态组件 &amp; 异步组件"></a><strong>动态组件 &amp; 异步组件</strong></h2><p>当我们想要根据条件，动态渲染某一个组件的时候，可以使用 Vue 提供的<br>动态组件功能。例如，当我们选择一个导航栏标题的时候，内容区域根据标<br>题的不同使用不同的组件。</p>
-<p>具体的做法是使用一个 Vue 提供的内置组件 <code>&lt;component&gt;</code>，在这个组件上使<br>用 <code>v-bind:is</code> 指令来选择不同的组件。</p>
-<p>例如一个组件的模板是这样的：</p>
-<pre><code>&lt;button v-for=&quot;tab of tabs&quot;
-        v-on:click=&quot;currentTab=tab&quot;/&gt;
-&lt;component v-bind:is=&quot;currentTabComponent&quot;&gt;</code></pre><p>那么当我们点击不同的导航栏标题的时候，<code>&lt;component&gt;</code> 组件就会根据 <code>currentTab</code><br>的不同，选择不同的组件。</p>
-<h3 id="在动态组件上面使用-keep-alive-来使得组件得以缓存"><a href="#在动态组件上面使用-keep-alive-来使得组件得以缓存" class="headerlink" title="在动态组件上面使用 keep-alive 来使得组件得以缓存"></a><strong>在动态组件上面使用 <code>keep-alive</code> 来使得组件得以缓存</strong></h3><p>一般情况下，动态组件会随着组件的切换，重新渲染一个新的组件对象。也就是说，当<br>我们切换组件的时候，之前那个组件的内容在重新切回这个组件的时候会消失不见。为<br>了保持之前那个组件的状态，可以使用 <code>&lt;keep-alive&gt;</code> 元素将 <code>component</code> 包裹起来，这<br>样失活的组件将会被缓存起来。</p>
-<p>具体的做法是：  </p>
-<pre><code>&lt;keep-alive&gt;
-    &lt;component v-bind:is=&quot;currentTabComponent&quot;&gt;
-&lt;/keep-alive&gt;</code></pre><p>需要注意的是：这个需要保持活性的组件应该始终拥有自己的名字，无论是通过组件的<br><code>name</code> 选项，还是通过全局注册/局部注册。</p>
-<h3 id="异步组件"><a href="#异步组件" class="headerlink" title="异步组件"></a><strong>异步组件</strong></h3><p>当想要异步从服务器中获取某一个组件的时候，我们可以使用<strong>异步组件</strong>的功能。Vue提供<br>的异步组件的使用方法是通过一个工厂函数来定义一个需要异步加载的组件，Vue 只有在<br>这个组件需要被加载的时候才会运行这个工厂函数，且 Vue 会将这个已经加载好了的组件<br>缓存起来供未来渲染。<br>像这样定义一个异步组件：  </p>
-<pre><code>Vue.component(&apos;async-component&apos;,function(resolve, reject){
-    // 这里使用 setTimeout 来模拟异步获取
-    setTimeout(()=&gt;{
-        // 假如 data 是获取到的数据或者模板
-        if(data){
-            resolve(data) // 这个是 promise 对象的使用，表示成功获取到数据
-        }else{
-            reject(reason) // 假如 reason 是失败的原因
-        }
-    })
-})</code></pre><p>其中，当我们成功获取到数据的时候，Vue 会调用 <code>resolve</code> 回调函数，反之则调用 <code>reject</code><br>回调函数。</p>
-<h2 id="处理边界情况"><a href="#处理边界情况" class="headerlink" title="处理边界情况"></a><strong>处理边界情况</strong></h2><h3 id="访问子组件或者子元素"><a href="#访问子组件或者子元素" class="headerlink" title="访问子组件或者子元素"></a><strong>访问子组件或者子元素</strong></h3><p>当我们想要在父级组件中访问子组件或者子元素对象的时候，可以在这个子组件或者子<br>元素中添加 ref 这个属性。这样我们就可以在父组件中通过 $refs 这个组件实例属性来获<br>取这个组件中所有带有 ref 这个属性的子组件对象。</p>
-<p>需要<strong>注意</strong>的是：通过这种方式获取的子组件属性并不是响应式的，这仅仅是为了获取子<br>组件临时状态的一种方法, 不应该在模板或者计算属性中访问 <code>$refs</code></p>
-<h3 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a><strong>依赖注入</strong></h3><p>当我们想要让一个组件的所有子组件都能够获取它的一个属性的话，我们可以使用<strong>依赖注入</strong>。<br>具体的做法是在这个组件中添加一个 <code>provide</code> 选项，选项中提供一个共享属性，例如：</p>
-<pre><code>provide: function(){
-    return {
-        getMap: this.map
-    }
-}</code></pre><p>相应的，在这个组件的子组件中提供一个 <code>inject</code> 选项来注入这个属性，像这样：  </p>
-<pre><code>inject:[&apos;getMap&apos;]</code></pre><p>那么，这个子组件就可以访问这个 <code>map</code> 属性，而不需要知道这个属性来自于哪个父级组件。<br>相应的，提供这个属性的父级组件也不知道那个子组件会使用它。</p>
-<p>需要<strong>注意</strong>的是：这种做法并不是响应式的。也就是说，子组件获取到的这个属性即使更改了<br>父级组件的那个属性并不会随之更改。</p>
-<h3 id="程序化事件侦听器"><a href="#程序化事件侦听器" class="headerlink" title="程序化事件侦听器"></a><strong>程序化事件侦听器</strong></h3><p>当想要在程序流程中自定义某一个组件的事件监听和取消监听，可以使用：  </p>
-<ul>
-<li><code>$on(event, eventHandler)</code> 监听一个事件</li>
-<li><code>$once(event, eventHandler)</code> 一次性监听一个事件（只监听一次）</li>
-<li><code>$off(event, eventHandler)</code> 取消监听一个事件</li>
-</ul>
-<h3 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a><strong>循环引用</strong></h3><ol>
-<li><p>递归组件</p>
-<p> 组件是可以在模板中调用自己的，这样就形成了一个递归组件。但是需要注意设置递归<br> 的退出条件（例如最终会得到一个 <code>false</code> 的 <code>v-if</code> 组件），否则这个组件会无穷递归下<br> 去，Vue 会报一个 <code>max stack size exceed</code> 的错误。</p>
-</li>
-<li><p>组件之间的循环引用</p>
-<p> 当我们想要在组件之间实现类似一种<em>组合模式</em>的时候，也就是像文件系统那样，一个文<br> 件可以是一个文件夹，也可以是一个文件，很容易出现这样一种组件的使用方式：  </p>
-<pre><code>// &lt;folder&gt;组件的模板内容
-template: `
-    &lt;p&gt;
-        &lt;span&gt;{{folder.name}}&lt;/span&gt;
-        &lt;folder-contents v-bind:children=&quot;folder.children&quot;/&gt;  
-    &lt;/p&gt;
-`</code></pre><p> ##</p>
-<pre><code>// &lt;folder-contents&gt; 组件的模板内容
-template： `
-    &lt;ul&gt;
-        &lt;li v-for=&quot;child of children&quot;&gt;
-            &lt;!--这里表示这个 child 是一个文件目录--&gt;
-            &lt;folder v-if=&quot;child.children&quot; v-bind:folder=&quot;child&quot;/&gt;
-            &lt;!--这里表示这个 child 是一个文件--&gt;
-            &lt;span v-else&gt;{{child.name}}&lt;/span&gt;
-        &lt;/li&gt;
-    &lt;/ul&gt;
-`</code></pre><p> 看似这两个组件这么使用好像没什么问题，实际上，这里会出现一个逻辑上的矛盾：当 Vue<br> 想要渲染 <code>folder</code> 组件的时候，发现它的子组件是 <code>folder-contents</code> ，当想要渲染<br> <code>folder-contents</code> 组件的时候，却发现需要渲染它的父组件。当使用全局注册这两个组件<br> 的时候， Vue 会解决这个矛盾，但是当使用一个像 <em>webpack</em>  这样的模块系统的时候，组件<br> 之间的依赖是通过导入一个单文件形成的，这样就会出现循环依赖的错误。  </p>
-<p> 解决方法是给模块系统设置一个依赖点，也就是当渲染一个组件的时候，人为的设置它所依赖<br> 的组件先不用渲染，只给一个定义，这样就退出了这个循环依赖。在这个例子中，<code>&lt;folder&gt;</code><br> 组件就是这个点，可以在组件的生命周期钩子 <code>beforeCreate</code> 中先给一个定义：  </p>
-<pre><code>beforeCreate: () =&gt; require(&quot;./folder-component.vue&quot;).default  </code></pre><p> 或者使用 <em>webpack</em> 的异步导入方法 <code>import</code> ：  </p>
-<pre><code>components: {
-    &quot;folder-component&quot; : () =&gt; import(&quot;./folder-component.vue&quot;)
-}</code></pre></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/yukino-blog/page/2/">2</a><a class="extend next" rel="next" href="/yukino-blog/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -2044,7 +1873,7 @@ template： `
       <div class="site-state-item site-state-posts">
           <a href="/yukino-blog/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
