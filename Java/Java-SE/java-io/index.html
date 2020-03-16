@@ -46,20 +46,20 @@
   };
 </script>
 
-  <meta name="description" content="类型信息运行时的类型信息可以让我们知道在程序运行的时候发现和使用类型信息。   Java 主要通过两种方式在运行的时候动态的获取对象和类的信息，即 “传统的” RTTI 和 反射。   传统的 RTTIRTTI（Runtime-Type-Identification)，即运行时类型信息。设计 RTTI 的主要目的是实现多态 这一面向对象设计的重要概念。通常继承自基类的各种具体派生类对象被赋值给一个">
+  <meta name="description" content="​    Java I&#x2F;O 系统是用来处理 Java 程序中的各种输入&#x2F;输出问题。Java 标准库中有大量的类用来处理输入输出，本文就我的学习情况对一些关键的 I&#x2F;O 使用进行总结。   File 类File （文件）类并不是字面意义上指的某一个文件，它既能代表一个特定文件的名称，又能代表一个目录下的一组文件的名称。如果它指的是一个文件集，也就是说是一个文件夹，那么可以对这个 File 对象调用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="类型信息">
-<meta property="og:url" content="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/RTTI&reflect/index.html">
+<meta property="og:title" content="Java I&#x2F;O">
+<meta property="og:url" content="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/java-io/index.html">
 <meta property="og:site_name" content="Yukino&#39;s Blog">
-<meta property="og:description" content="类型信息运行时的类型信息可以让我们知道在程序运行的时候发现和使用类型信息。   Java 主要通过两种方式在运行的时候动态的获取对象和类的信息，即 “传统的” RTTI 和 反射。   传统的 RTTIRTTI（Runtime-Type-Identification)，即运行时类型信息。设计 RTTI 的主要目的是实现多态 这一面向对象设计的重要概念。通常继承自基类的各种具体派生类对象被赋值给一个">
+<meta property="og:description" content="​    Java I&#x2F;O 系统是用来处理 Java 程序中的各种输入&#x2F;输出问题。Java 标准库中有大量的类用来处理输入输出，本文就我的学习情况对一些关键的 I&#x2F;O 使用进行总结。   File 类File （文件）类并不是字面意义上指的某一个文件，它既能代表一个特定文件的名称，又能代表一个目录下的一组文件的名称。如果它指的是一个文件集，也就是说是一个文件夹，那么可以对这个 File 对象调用">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-02-25T03:54:49.000Z">
+<meta property="article:published_time" content="2020-03-15T09:10:49.000Z">
 <meta property="article:modified_time" content="2020-03-16T14:00:36.135Z">
 <meta property="article:author" content="Yukino Li">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/RTTI&reflect/">
+<link rel="canonical" href="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/java-io/">
 
 
 <script id="page-configurations">
@@ -71,7 +71,7 @@
   };
 </script>
 
-  <title>类型信息 | Yukino's Blog</title>
+  <title>Java I/O | Yukino's Blog</title>
   
 
 
@@ -216,7 +216,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/RTTI&reflect/">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/java-io/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
@@ -229,7 +229,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          类型信息
+          Java I/O
         </h1>
 
         <div class="post-meta">
@@ -239,7 +239,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-02-25 11:54:49" itemprop="dateCreated datePublished" datetime="2020-02-25T11:54:49+08:00">2020-02-25</time>
+              <time title="创建时间：2020-03-15 17:10:49" itemprop="dateCreated datePublished" datetime="2020-03-15T17:10:49+08:00">2020-03-15</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -277,33 +277,56 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="类型信息"><a href="#类型信息" class="headerlink" title="类型信息"></a><strong>类型信息</strong></h1><p><em>运行时的类型信息可以让我们知道在程序运行的时候发现和使用类型信息。</em>  </p>
-<p>Java 主要通过两种方式在运行的时候动态的获取对象和类的信息，即 “传统的” <strong>RTTI</strong> 和 <strong>反射</strong>。  </p>
-<h2 id="传统的-RTTI"><a href="#传统的-RTTI" class="headerlink" title="传统的 RTTI"></a><strong>传统的 RTTI</strong></h2><p>RTTI（Runtime-Type-Identification)，即运行时类型信息。设计 RTTI 的主要目的是实现<strong>多态</strong> 这一面向对象设计的重要概念。通常继承自基类的各种具体派生类对象被赋值给一个基类的引用的时候，使用这个基类引用能够根据运行时类型信息来调用各自重写的方法。  </p>
-<p>这样做的好处是当我们拓展这个基类的时候，可以在不用更改代码的前提下，实现一个新的方法调用。</p>
-<h2 id="实现RTTI的原理——Class-对象"><a href="#实现RTTI的原理——Class-对象" class="headerlink" title="实现RTTI的原理——Class 对象"></a><strong>实现RTTI的原理——Class 对象</strong></h2><p>在 Java 中，类型信息在运行时是通过一种被称为 <strong>Class</strong> 对象的特殊对象完成的，它包含了与类有关的信息。事实上，Class 对象就是用来创建类的所有常规对象的。  </p>
-<p>每一个类都有一个 Class 对象，也就是说，每当编译一个新类，就会产生一个 Class 对象（确切的说，是被保存在一个同名的 .class 文件中）。为了生成这个类的对象，运行这个程序的 Java 虚拟机将使用被称为 ”类加载器“（ClassLoader）的子系统。  </p>
-<p>类加载器子系统实际上可以包含多个类加载器链，但是只有一个原生类加载器，它是 JVM 的一个实现部分，他专门加载所谓的可信类，他们通常从本地盘中加载。当我们需要添加额外的类加载器时，例如以某种特殊的方式加载类来支持 Web 服务器应用，或者在网络上加载类），那么可以使用一种特殊的方式挂载额外的类加载器。 </p>
-<p>通常，我们使用 Class 对象来表述一个类的类型信息。Class 对象有很多实用的方法，它们被用来在运行时操作和使用类的类型信息。常用的方法有：  </p>
-<ul>
-<li><code>Class.forName(String)</code> ：被用来获取一个类的 Class 对象的引用，方法的参数是这个类的全限定名。一般作为静态方法使用。  </li>
-<li><code>classObj.newInstance()</code> : 用来获取一个该类型类的一个实例。它的成功运行的条件是指定的类需要能够被实例化（接口和抽象类除外），并且拥有一个默认的构造器。  </li>
-<li>其他方法待续 </li>
-</ul>
-<p>获得一个类的 Class 对象除了通过 <code>forName()</code> 方法，还可以通过类字面常量获取。即通过，类名.class 获取这个 Class 对象。这样做更加安全和简单，因为它在编译时就会受到检查。需要注意的是，通过这种方式获得的 Class 对象的引用并不会自动地初始化这个 Class 对象。  </p>
-<h3 id="泛化的-Class-引用"><a href="#泛化的-Class-引用" class="headerlink" title="泛化的 Class 引用"></a><strong>泛化的 Class 引用</strong></h3><p>Class 引用指向某个 Class 对象，它可以制造能够实例化的该类的对象实例。当结合 <em>泛型</em> 机制，Class 引用能够变得更加具体。通过泛型机制，Class 引用能够在编译器获得检查，让 Class 引用变得更加安全和方便使用。例如：  </p>
-<pre><code>Class clazz1 = int.class;
-Class&lt;Integer&gt; clazz2 = int.class;</code></pre><p>这两种 Class 引用都是正确的，但是前者并不能获得编译器的检查，因此它可以指向任意 Class 对象，后者限制性地只能指向 Integer 类的 Class 对象。 </p>
-<p>当想要放松这种限制的时候，可能会使用如下方式：  </p>
-<pre><code>Class&lt;Number&gt; clazz = int.class;</code></pre><p>但是这种方式是不正确的，它会在编译时就发生错误，即通不过编译。因为 Integer Class 并没有继承自 Number Class。</p>
-<p>通常，为了放松限制，我们使用 <code>?</code> 这一通配符来表示任意类型，并且搭配 <code>extends</code> 关键字使用，上面的例子可以这样写：  </p>
-<pre><code>Class&lt;? extends Number&gt; clazz = int.class;</code></pre><p>这样 clazz 这个引用就可以指向任意 <em>继承自 Number</em> 的 Class 对象。 </p>
-<h2 id="加载类的运行过程"><a href="#加载类的运行过程" class="headerlink" title="加载类的运行过程"></a><strong>加载类的运行过程</strong></h2><p>所有的类都是在对其第一次使用的时候，动态地加载到 JVM 中的。<strong>当程序创建第一个对类的静态成员的引用</strong>时，就会加载这个类。这个说法证明了构造方法也是类的静态方法，即使没有使用 <code>static</code> 关键字。因此，当我们使用 new 关键字在堆中创建一个该类的对象的时候，这个过程也会被当作对类的静态成员的引用。  </p>
-<p>由此可见，Java 程序在它开始运行之前并非完全加载，其各个部分的类当运行时需要使用时才动态的加载。这是 C++ 这种静态语言难以做到的。  </p>
-<p>当一个类的 Class 对象被加载到内存中时，这个对象就被用来创建这个类的所有普通对象。一个类的 static 代码块是在类加载的时候被调用的。  </p>
-<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a><strong>反射</strong></h2><p>通过 RTTI，可以知道某个对象的类型信息，也就是这个对象所属的类的 Class 对象。但是通过 RTTI 有一个限制：<strong>必须在编译期就已经确定这个对象所属的类</strong>。这使得通过 RTTI 来获取的类必须是在编译前本地已经被类加载器加载过的类，如果我们在运行期间通过网络获取一个未知类的字节码，我们是无法通过 RTTI 获取这个类的类型信息的。Java 允许我们通过 <strong>反射</strong> 在运行期间获取一个未知类的类型信息。  </p>
-<p>Class 类和 java.util.reflect 类库一起对反射提供了支持。这个类库包含了  <code>Field</code> 、<code>Method</code>、<code>Constructor</code> 类。这些类型的对象是由 JVM 在运行期间创建的，用来表示未知类对应的成员。这样我们可以使用 <code>Constructor</code> 创建新的对象，用 <code>get()</code> 和 <code>set()</code> 方法读取和修改 Field 对象关联的字段，用 <code>invoke()</code> 方法调用与 <code>Method</code> 对象关联的方法。这样，匿名对象的类信息在运行期间就被完全确定下来，而在编译器不需要任何信息。  </p>
-<p>反射与 RTTI 本质上并没有什么不同，它们都需要在获取类信息之前加载那个类的 Class 对象，因此那个类的 .class 文件是必须获取到的。它们的的不同之处在于 RTTI 在编译期就已经将那个类的 Class 对象加载了，而反射则是在运行期间获取并加载那个类的 Class 对象。</p>
+        <p>​    Java I/O 系统是用来处理 Java 程序中的各种输入/输出问题。Java 标准库中有大量的类用来处理输入输出，本文就我的学习情况对一些关键的 I/O 使用进行总结。  </p>
+<h2 id="File-类"><a href="#File-类" class="headerlink" title="File 类"></a>File 类</h2><p>File （文件）类并不是字面意义上指的某一个文件，它既能代表一个特定文件的名称，又能代表一个目录下的一组文件的名称。如果它指的是一个文件集，也就是说是一个文件夹，那么可以对这个 File 对象调用 <code>list()</code> 方法，这个方法会返回一个字符数组。  </p>
+<h3 id="使用-FilenameFilter-接口对目录下的文件进行过滤"><a href="#使用-FilenameFilter-接口对目录下的文件进行过滤" class="headerlink" title="使用 FilenameFilter 接口对目录下的文件进行过滤"></a>使用 FilenameFilter 接口对目录下的文件进行过滤</h3><p>我们可以使用 <code>list()</code> 方法获取一个是目录的文件的子文件，他会返回所有的子文件列表，当我们想要获取一个指定规则的子文件列表的时候，可以在该方法传入一个 <code>FilenameFilter</code> 接口的实现类，或者 lambada，用来过滤这个列表。</p>
+<p><code>FilenameFilter</code> 接口是一个函数式接口，所以我们可以传入一个 lambada 表达式。这个接口只有一个 <code>accept()</code> 方法，用来在 <code>list()</code> 方法中回调。</p>
+<p><code>accept()</code> : <code>public boolean accept(File dir, String name)</code><br>`  </p>
+<p>例如，当前目录的子文件有：a.java, b.py, c.cpp, 我们想要在当前目录中获取以 .java 为后缀的文件名。代码如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">File currentDir = <span class="keyword">new</span> File(<span class="string">"."</span>);</span><br><span class="line">Pattern pattern = Pattern.compile(<span class="string">".+\\.java"</span>);</span><br><span class="line">String[] filteredSubFiles = currentDir.list(</span><br><span class="line">    (dir, name)-&gt;pattern.matcher(name).matches());</span><br><span class="line"><span class="keyword">for</span>(String s : filteredSubFiles)&#123;</span><br><span class="line">    System.out.println(s)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// expected output:</span></span><br><span class="line"><span class="comment">// a.java</span></span><br></pre></td></tr></table></figure>
+<h2 id="目录的检查和创建"><a href="#目录的检查和创建" class="headerlink" title="目录的检查和创建"></a>目录的检查和创建</h2><p>File 对象有很多实用的方法，可以用 <code>file.isDirectory()</code>, <code>file.isFile()</code> 来检查这个路径是一个文件还是一个目录，用 <code>file.exists()</code> 检查是否存在，用 <code>file.getAbsolutePath()</code> 获取它的绝对路径，用 <code>file.mkdirs()</code> 创建这个路径下的目录等等。通过 File 类，我们可以对系统的文件进行各种各样的操作。  </p>
+<h2 id="InputStream-类和-OutputStream-类"><a href="#InputStream-类和-OutputStream-类" class="headerlink" title="InputStream 类和 OutputStream 类"></a>InputStream 类和 OutputStream 类</h2><p>这两个类作为输入输出的基本类，提供了流操作的基本方法。它面向字节流，将数据的字节抽象为字节流，对数据进行输入和输出。  </p>
+<p>任何数据在计算机中的表示都是一个个的字节。因此，可以通过这两个类，对各种数据进行底层的操作。包括文本文件，图片文件，视频文件等等，它们都是由字节构成的数据。  </p>
+<p>为了方便的操作各种各样的数据，Java 从这两个类中派生出一系列操作某一类数据的派生类以提供对这些数据更加具体的输入和输入。这些数据源包括：  </p>
+<ol>
+<li>字节数组，对应的类：ByteArrayInputStream（OutPutStream）</li>
+<li>字符串对象，对应的类：StringBufferInputStream（OutPutStream）,最新的 jdk 不再推荐被使用</li>
+<li>文件，对应的类：FileInputStream（OutPutStream）</li>
+<li>管道，对应的类：PipedInputStream（OutPutStream）</li>
+<li>由其他流组成的序列（便于组合为一个流）：SequenceInputStream（OutPutStream）</li>
+<li>其他数据源：例如网络流，对网络进行支持。  </li>
+</ol>
+<p>这些流对象使用的最多的就是文件流，文件流对象将文件的数据抽象为字节流，对文件进行字节上的输入和输出。  </p>
+<h3 id="针对-InputStream-和-OutputStream-的装饰器类"><a href="#针对-InputStream-和-OutputStream-的装饰器类" class="headerlink" title="针对 InputStream 和 OutputStream 的装饰器类"></a>针对 InputStream 和 OutputStream 的装饰器类</h3><p>Java 的 I/O 系统使用装饰器模式，为输入输出流提供更多的属性和接口。这些装饰器类都继承自：FilterInputStream（OutputStream），但是使用的最多的还是 BufferedInputStream（OutputStream），它可以让输入输出变得更加快速，通过缓冲区来降低流操作的性能损耗。  </p>
+<p>用法：</p>
+<pre><code class="java">BufferedInputStream bfi = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(<span class="string">"./bigFile.mp4"</span>)));
+<span class="keyword">byte</span>[] buff = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];
+bfi.read(buff, <span class="number">0</span>, <span class="number">1024</span>);
+<span class="comment">// 此方法获取该文件的第一个KB的字节数组</span>
+<span class="comment">// 用 BufferedInputStream 可以提高输入输出的速度</span></code></pre>
+<h2 id="Reader-和-Writer-类"><a href="#Reader-和-Writer-类" class="headerlink" title="Reader 和 Writer 类"></a>Reader 和 Writer 类</h2><p>与 InputStream 和 OutputStream 一样，Reader 和 Writer 类同样提供了 I/O 功能，区别在于 Reader 和 Writer 是面向<strong>字符流</strong>的。这使得 Reader 和 Writer 对 Unicode 提供了支持。  </p>
+<p>Reader 和 Writer 的派生类都有 InputStream 和 OutputStream 的对应。但是它们对处理文件中的字符处理提供了更加完善的方法。所以，当处理字符的时候，应该使用 Reader 和 Writer 类。  </p>
+<p>有些时候，需要让一个 InputStream 和 OutputStream 获得 Reader 和 Writer的特性的时候，我们可以使用两个适配器类：   </p>
+<ol>
+<li>InputStreamReader</li>
+<li>OutputStreamWriter</li>
+</ol>
+<p>它们可以将作为构造参数的输出输出流转换成 Reader 和 Writer。</p>
+<h2 id="标准-I-O-流"><a href="#标准-I-O-流" class="headerlink" title="标准 I/O 流"></a>标准 I/O 流</h2><p>标准输入输出流是指程序中所使用的单一信息流。也就是说，可以认为程序中的所有输入都来源于标准输入，程序中的所有输出都可以发送到标准输出。  </p>
+<p>Java 中的标准 I/O 主要有一下3种：  </p>
+<ol>
+<li>System.out</li>
+<li>System.in</li>
+<li>System.err</li>
+</ol>
+<p>其中，标准输出和标准错误输出都是一个被包装好的对象，我们可以直接使用。标准输入只是一个 InputStream ，需要进一步的包装这个类才能有效的使用。  </p>
+<p>标准输出和标准错误输出都是以控制台为输出源。标准输入默认以键盘输入作为默认输入源。  </p>
+<h3 id="标准输入输出的重定向"><a href="#标准输入输出的重定向" class="headerlink" title="标准输入输出的重定向"></a>标准输入输出的重定向</h3><p>重定向是指改变标准输入输出的输入源和输出源。System 类提供了一系列静态方法以改变标准输入输出的源头。  </p>
+<ol>
+<li>System.setIn(InputStream)</li>
+<li>System.setOut(PrintStream)</li>
+<li>System.(PrintStream) </li>
+</ol>
 
     </div>
 
@@ -322,12 +345,12 @@ Class&lt;Integer&gt; clazz2 = int.class;</code></pre><p>这两种 Class 引用�
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/yukino-blog/Vue/Vuex/vuex-base/" rel="prev" title="Vuex 基础">
-      <i class="fa fa-chevron-left"></i> Vuex 基础
+    <a href="/yukino-blog/Java/Java-SE/RTTI&reflect/" rel="prev" title="类型信息">
+      <i class="fa fa-chevron-left"></i> 类型信息
     </a></div>
       <div class="post-nav-item">
-    <a href="/yukino-blog/Java/Java-SE/java-io/" rel="next" title="Java I/O">
-      Java I/O <i class="fa fa-chevron-right"></i>
+    <a href="/yukino-blog/Java/Java-SE/java-regex/" rel="next" title="Java 正则表达式">
+      Java 正则表达式 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -388,7 +411,7 @@ Class&lt;Integer&gt; clazz2 = int.class;</code></pre><p>这两种 Class 引用�
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#类型信息"><span class="nav-number">1.</span> <span class="nav-text">类型信息</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#传统的-RTTI"><span class="nav-number">1.1.</span> <span class="nav-text">传统的 RTTI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现RTTI的原理——Class-对象"><span class="nav-number">1.2.</span> <span class="nav-text">实现RTTI的原理——Class 对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#泛化的-Class-引用"><span class="nav-number">1.2.1.</span> <span class="nav-text">泛化的 Class 引用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载类的运行过程"><span class="nav-number">1.3.</span> <span class="nav-text">加载类的运行过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反射"><span class="nav-number">1.4.</span> <span class="nav-text">反射</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#File-类"><span class="nav-number">1.</span> <span class="nav-text">File 类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-FilenameFilter-接口对目录下的文件进行过滤"><span class="nav-number">1.1.</span> <span class="nav-text">使用 FilenameFilter 接口对目录下的文件进行过滤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目录的检查和创建"><span class="nav-number">2.</span> <span class="nav-text">目录的检查和创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InputStream-类和-OutputStream-类"><span class="nav-number">3.</span> <span class="nav-text">InputStream 类和 OutputStream 类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#针对-InputStream-和-OutputStream-的装饰器类"><span class="nav-number">3.1.</span> <span class="nav-text">针对 InputStream 和 OutputStream 的装饰器类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reader-和-Writer-类"><span class="nav-number">4.</span> <span class="nav-text">Reader 和 Writer 类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标准-I-O-流"><span class="nav-number">5.</span> <span class="nav-text">标准 I&#x2F;O 流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标准输入输出的重定向"><span class="nav-number">5.1.</span> <span class="nav-text">标准输入输出的重定向</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
