@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/yukino-blog/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/yukino-blog/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/yukino-blog/images/favicon.png">
+  <link rel="mask-icon" href="/yukino-blog/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/yukino-blog/css/main.css">
+
+
+<link rel="stylesheet" href="/yukino-blog/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://bigtigergg.github.io/yukino-blog').hostname,
+    root: '/yukino-blog/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="JDK 1.4 引进了新的 Java I&#x2F;O 库，目的在于提高速度。同时，旧 I&#x2F;O 的一部分也用 NIO 重新实现过，所以旧 I&#x2F;O 也从中收益，即便没有使用新 I&#x2F;O。   通道和缓冲器新的 I&#x2F;O 之所以提升了速度，是因为使用了更加接近操作系统执行 I&#x2F;O 的方式。即通道和缓冲器。这两个概念可以这么理解：   通道 即将输入输出源和程序连接起来，我们将它抽象成一道路。在 Java 中用 Ch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO">
+<meta property="og:url" content="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/java-nio/index.html">
+<meta property="og:site_name" content="Yukino&#39;s Blog">
+<meta property="og:description" content="JDK 1.4 引进了新的 Java I&#x2F;O 库，目的在于提高速度。同时，旧 I&#x2F;O 的一部分也用 NIO 重新实现过，所以旧 I&#x2F;O 也从中收益，即便没有使用新 I&#x2F;O。   通道和缓冲器新的 I&#x2F;O 之所以提升了速度，是因为使用了更加接近操作系统执行 I&#x2F;O 的方式。即通道和缓冲器。这两个概念可以这么理解：   通道 即将输入输出源和程序连接起来，我们将它抽象成一道路。在 Java 中用 Ch">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-16T14:01:49.000Z">
+<meta property="article:modified_time" content="2020-03-20T13:53:32.635Z">
+<meta property="article:author" content="Yukino Li">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/java-nio/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Java NIO | Yukino's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/yukino-blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yukino's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">study and life</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/yukino-blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/yukino-blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/yukino-blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/yukino-blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/yukino-blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/yukino-blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Java/Java-SE/java-nio/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
+      <meta itemprop="name" content="Yukino Li">
+      <meta itemprop="description" content="a blogging site to log my study and life">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yukino's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java NIO
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-16 22:01:49" itemprop="dateCreated datePublished" datetime="2020-03-16T22:01:49+08:00">2020-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-20 21:53:32" itemprop="dateModified" datetime="2020-03-20T21:53:32+08:00">2020-03-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Java/Java-SE/" itemprop="url" rel="index">
+                    <span itemprop="name">Java SE</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>JDK 1.4 引进了新的 Java I/O 库，目的在于提高速度。同时，旧 I/O 的一部分也用 NIO 重新实现过，所以旧 I/O 也从中收益，即便没有使用新 I/O。  </p>
+<h2 id="通道和缓冲器"><a href="#通道和缓冲器" class="headerlink" title="通道和缓冲器"></a>通道和缓冲器</h2><p>新的 I/O 之所以提升了速度，是因为使用了更加接近操作系统执行 I/O 的方式。即<strong>通道和缓冲器</strong>。这两个概念可以这么理解：  </p>
+<p><em>通道</em> 即将输入输出源和程序连接起来，我们将它抽象成一道路。在 Java 中用 Channel 类来表示。程序不会直接和通道交互，而是使用 <em>缓冲器</em> 来运送数据，缓冲期在通道上将数据获取或者写入，数据经由通道与源进行交互。  </p>
+<p>唯一能和通道交互的缓冲器是 <code>ByteBuffer</code> ，也就是说，通道上面只能传送字节数据。   </p>
+<h3 id="通道的基本使用"><a href="#通道的基本使用" class="headerlink" title="通道的基本使用"></a>通道的基本使用</h3><p>使用的最多的通道应该是 <code>FileChannel</code> 了，它是一种文件通道，用于和文件数据交互。通常可以从旧 I/O 中获取文件通道：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FileChannel fsi = <span class="keyword">new</span> FileInputStream(<span class="string">"./demo.txt"</span>).getChannel();</span><br><span class="line">FileChannel fso = <span class="keyword">new</span> FileOutputStream(<span class="string">"./demo.txt"</span>).getChannel();</span><br><span class="line">FileChannel fsra = <span class="keyword">new</span> RandomAccessFile(<span class="string">"./demo.txt"</span>).getChannel();</span><br></pre></td></tr></table></figure>
+
+<p>通过使用 <code>getChannel</code> 方法来获取对应 I/O 的文件通道。文件通道可以通过使用 <code>read(ByteBuffer)</code>, <code>write(ByteBuffer)</code> 获取（放上）字节缓冲器来进行输入输出。这就是通道的基本用法。  </p>
+<h3 id="缓冲器的数据结构"><a href="#缓冲器的数据结构" class="headerlink" title="缓冲器的数据结构"></a>缓冲器的数据结构</h3><p>缓冲器由数据和可以高效访问这些数据的4个索引组成，这四个索引分别是：  </p>
+<ol>
+<li>mark 标记<br> 用于给位置留下标记，便于位置信息的保存。可以使用 <code>mark()</code> 方法将当前的 position 设置为 mark。同时也可通过 <code>reset()</code> 方法将 position 还原为 mark 的值。  </li>
+<li>position 位置<br> 用于表示当前的缓冲器位置，当读取或者写入的时候，这个值会相应的改变</li>
+<li>limit 界限<br> 标识了缓冲器能读取或者能写入的界限，position 的值永远不会超过 limit 的值，否则将会抛出 BufferUnderflowException</li>
+<li>capacity 容量<br> 标识了缓冲器的最大容量。容量在初始化这个缓冲器的时候就被定义好了，之后不能更改。</li>
+</ol>
+<h3 id="缓冲器的基本使用方法"><a href="#缓冲器的基本使用方法" class="headerlink" title="缓冲器的基本使用方法"></a>缓冲器的基本使用方法</h3><ol>
+<li><p><code>get()</code><br> 将一个字节数据从缓冲器当前的位置读取出来，position 加一。</p>
+</li>
+<li><p><code>put()</code><br> 将一个字节数据写入到当前的缓冲器位置，position 加一。</p>
+</li>
+</ol>
+<blockquote>
+<p>这两个方法还有一系列的重载，详细内容请参考 JDK 文档</p>
+</blockquote>
+<ol start="3">
+<li><code>filp()</code><br> 当从通道中读取字节数据到缓冲器中，一旦准备好要读取这个缓冲器中的值的时候，应该立即使用：<code>flip()</code> 方法让这个缓冲器做好被读取的准备。这个方法会将 limit 索引设置成当前的 position 值，并且 position 会被设置为 0。这样这个缓冲器被读取的时候，就只会被读取到 limit-position 之间的数据，防止数据被错误读取。  </li>
+<li><code>ByteBuffer.wrap()</code> (这是一个静态方法)<br> 将一个字节缓冲器直接包装到通道里面, 缓冲器中的索引为自动设置好，所以不用调用 <code>flip()</code></li>
+<li><code>ByteBuffer.allocate(int), ByteBuffer.allocateDirect(int)</code><br> 返回一个分配了指定长度的字节缓冲器，后者是“直接的”缓冲器，与操作系统更加耦合，速度也更快。</li>
+</ol>
+<p>下面是缓冲器从通道中读取或者写入的范例：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写入</span></span><br><span class="line">FileChannel fso = <span class="keyword">new</span> FileOutputStream(<span class="string">"./demo.txt"</span>).getChannel();</span><br><span class="line">fso.write(ByteBuffer.wrap(<span class="string">"hello world"</span>.getBytes()));</span><br><span class="line">fso.close();</span><br><span class="line"><span class="comment">// 或者这样写</span></span><br><span class="line"><span class="comment">// ByteBuffer buf = ByteBuffer.allocate(1024);</span></span><br><span class="line"><span class="comment">// buf.put("hello world".getBytes());</span></span><br><span class="line"><span class="comment">// buf.flip();</span></span><br><span class="line"><span class="comment">// fso.write(buf);</span></span><br><span class="line"><span class="comment">// fc.close()</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 读取</span></span><br><span class="line">FileChannel fsi = <span class="keyword">new</span> FileInputStream(<span class="string">"./demo.txt"</span>).getChannel();</span><br><span class="line">ByteBuffer buf = ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">fsi.read(buf);</span><br><span class="line">buf.flip();</span><br><span class="line"><span class="keyword">while</span>(buf.hasRemaining())&#123;</span><br><span class="line">    System.out.print((<span class="keyword">char</span>)buf.get());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="视图缓冲器"><a href="#视图缓冲器" class="headerlink" title="视图缓冲器"></a>视图缓冲器</h3><p>视图缓冲器可以通过某个特定的基本数据类型的视窗查看其底层的字节缓冲器。这相当于在字节缓冲器上面添加了一个装饰器，我们可以直接通过这些视图缓冲器通过操纵基本数据类型来映射到字节缓冲器的改变。  </p>
+<p>最常用的视图缓冲器是 CharBuffer ，通过它可以直接操作字符来达到对字节缓冲器的控制。当我们从通道中获取字符类型的数据的时候，需要有一个字节数据到字符数据的转换。而有了字符缓冲器，我们可以直接获取字节缓冲器中的字符型数据。例如上面的读文件操作我们可以这样写：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(buf.asCharBuffer()); </span><br><span class="line"><span class="comment">// CharBuffer 重写了toString()方法，可以直接输出字节缓冲其中的所有字符串</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="内存映射-MappedByteBuffer"><a href="#内存映射-MappedByteBuffer" class="headerlink" title="内存映射 MappedByteBuffer"></a>内存映射 MappedByteBuffer</h2><p>当想读取的文件太大，我们不能将一整个文件全部读取到内存中。这时候可以使用字节映射缓冲器。这个缓冲器通过文件通道获取，获取的方法为：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MappedByteBuffer out = <span class="keyword">new</span> RandomAccessFile(<span class="string">"./demo.txt"</span>, <span class="string">"rw"</span>)</span><br><span class="line">    .getChannel()</span><br><span class="line">    .map(FileChannal.MapMode.READ_WRITE, <span class="number">0</span>, <span class="number">0x8FFFFF</span>);</span><br><span class="line">out.put((<span class="keyword">byte</span>)<span class="string">'x'</span>); <span class="comment">// 这里直接写入了文件，不需要通道的写方法</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="文件加锁"><a href="#文件加锁" class="headerlink" title="文件加锁"></a>文件加锁</h2><p>在 Java 中，我们可以使用文件锁，让一个文件同步访问。但是，竞争这个锁的两个线程可能不再同一个 JVM 上面。或者是一个 Java 线程，另一个是操作系统中的其他的某个本地线程。文件锁对于其他操作系统进程是可见的，Java 的文件锁直接映射到本地系统的加锁工具。基本使用如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">FileOutputStream fout = <span class="keyword">new</span> FileOutputStream(<span class="string">"./demo.txt"</span>);</span><br><span class="line">FileLock fl = fout.getChannel().tryLock();</span><br><span class="line"><span class="keyword">if</span> (fl != <span class="keyword">null</span>) &#123;</span><br><span class="line">    System.out.println(<span class="string">"Locked file!"</span>);</span><br><span class="line">    TimeUnit.MILLISECONDS.sleep(<span class="number">1000</span>);</span><br><span class="line">    fl.release();</span><br><span class="line">    System.out.println(<span class="string">"Released Lock!"</span>);</span><br><span class="line">&#125;</span><br><span class="line">fout.close();</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，使用文件通道来调用 <code>tryLock()</code> 方法来尝试对文件进行加锁。如果成功获取了锁，则会返回一个 <code>FileLock</code> 对象，如果没有获得锁，则返回 <code>null</code> 。</p>
+<p><code>tryLock()</code> 方法是非阻塞式的，当调用这个方法会尝试获取文件的锁，他会尝试去获取文件锁。与之对应的是 <code>lock()</code> 方法，这个方法是阻塞式的，它会设法获取文件的锁，如果无法获得，它会一直阻塞当前线程直到能得到，或者将这个线程中断，又或者调用这个方法的通道关闭。  </p>
+<p>使用 <code>FileLock</code> 对象的 <code>release()</code> 方法可以释放锁。  </p>
+<p>这两个方法还有一个重载形式用于对文件的某一部分加锁。详细请参考 JDK 文档。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/yukino-blog/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/yukino-blog/Java/Java-SE/java-regex/" rel="prev" title="Java 正则表达式">
+      <i class="fa fa-chevron-left"></i> Java 正则表达式
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#通道和缓冲器"><span class="nav-number">1.</span> <span class="nav-text">通道和缓冲器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通道的基本使用"><span class="nav-number">1.1.</span> <span class="nav-text">通道的基本使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓冲器的数据结构"><span class="nav-number">1.2.</span> <span class="nav-text">缓冲器的数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓冲器的基本使用方法"><span class="nav-number">1.3.</span> <span class="nav-text">缓冲器的基本使用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#视图缓冲器"><span class="nav-number">1.4.</span> <span class="nav-text">视图缓冲器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存映射-MappedByteBuffer"><span class="nav-number">2.</span> <span class="nav-text">内存映射 MappedByteBuffer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件加锁"><span class="nav-number">3.</span> <span class="nav-text">文件加锁</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yukino Li</p>
+  <div class="site-description" itemprop="description">a blogging site to log my study and life</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/yukino-blog/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/yukino-blog/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/yukino-blog/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BigtigerGG" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BigtigerGG" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1602006646@qq.com" title="E-Mail → mailto:1602006646@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yukino Li</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/yukino-blog/lib/anime.min.js"></script>
+  <script src="/yukino-blog/lib/velocity/velocity.min.js"></script>
+  <script src="/yukino-blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/yukino-blog/js/utils.js"></script>
+
+<script src="/yukino-blog/js/motion.js"></script>
+
+
+<script src="/yukino-blog/js/schemes/pisces.js"></script>
+
+
+<script src="/yukino-blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/yukino-blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
