@@ -17,8 +17,8 @@ categories:
 类文件的结构如下：  
 
 ```java
-    // u 代表一个字节，例如 u4 代表4个字节
-    ClassFile {
+// u 代表一个字节，例如 u4 代表4个字节
+ClassFile {
     u4             magic; //Class 文件的标志
     u2             minor_version;//Class 的小版本号
     u2             major_version;//Class 的大版本号
