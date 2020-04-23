@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/yukino-blog/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/yukino-blog/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/yukino-blog/images/favicon.png">
+  <link rel="mask-icon" href="/yukino-blog/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/yukino-blog/css/main.css">
+
+
+<link rel="stylesheet" href="/yukino-blog/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://bigtigergg.github.io/yukino-blog').hostname,
+    root: '/yukino-blog/',
+    scheme: 'Pisces',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="现在大部分的 JDK 都是使用 JDK1.8，了解 Java8 的新特性是很有必要的。Java 8增加了很多语法糖，其中最重要的例如对 Lambda 语法的支持、函数式接口、Stream 等等。这篇文章结合我所学的对各种新特性进行总结。   Lambda 表达式和函数式接口熟悉 Javascript 的同学肯定知道，在 ES6 中增加了箭头函数，也就是我们所说的 Lambda 表达式。这种编程风格">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java8 新特性总结">
+<meta property="og:url" content="https://bigtigergg.github.io/yukino-blog/Java/Java8/java8/index.html">
+<meta property="og:site_name" content="Yukino&#39;s Blog">
+<meta property="og:description" content="现在大部分的 JDK 都是使用 JDK1.8，了解 Java8 的新特性是很有必要的。Java 8增加了很多语法糖，其中最重要的例如对 Lambda 语法的支持、函数式接口、Stream 等等。这篇文章结合我所学的对各种新特性进行总结。   Lambda 表达式和函数式接口熟悉 Javascript 的同学肯定知道，在 ES6 中增加了箭头函数，也就是我们所说的 Lambda 表达式。这种编程风格">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-23T06:21:39.000Z">
+<meta property="article:modified_time" content="2020-04-23T14:48:59.153Z">
+<meta property="article:author" content="Yukino Li">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bigtigergg.github.io/yukino-blog/Java/Java8/java8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Java8 新特性总结 | Yukino's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/yukino-blog/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yukino's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">study and life</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/yukino-blog/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/yukino-blog/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/yukino-blog/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/yukino-blog/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/yukino-blog/schedule/" rel="section"><i class="fa fa-fw fa-calendar"></i>日程表</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/yukino-blog/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Java/Java8/java8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
+      <meta itemprop="name" content="Yukino Li">
+      <meta itemprop="description" content="a blogging site to log my study and life">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yukino's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java8 新特性总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-23 14:21:39 / 修改时间：22:48:59" itemprop="dateCreated datePublished" datetime="2020-04-23T14:21:39+08:00">2020-04-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Java/Java8/" itemprop="url" rel="index">
+                    <span itemprop="name">Java8</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>现在大部分的 JDK 都是使用 JDK1.8，了解 Java8 的新特性是很有必要的。Java 8增加了很多语法糖，其中最重要的例如对 Lambda 语法的支持、函数式接口、Stream 等等。这篇文章结合我所学的对各种新特性进行总结。  </p>
+<h2 id="Lambda-表达式和函数式接口"><a href="#Lambda-表达式和函数式接口" class="headerlink" title="Lambda 表达式和函数式接口"></a>Lambda 表达式和函数式接口</h2><p>熟悉 Javascript 的同学肯定知道，在 ES6 中增加了箭头函数，也就是我们所说的 Lambda 表达式。这种编程风格属于函数式编程，Java 8 中也对函数式编程提供了一系列的支持。箭头函数的概念和 C++ 中的函数指针有点类似，通过将函数作为引用（指针）传递给方法中的参数或者赋值给一个变量。Java中的箭头函数需要和函数式接口配合使用。  </p>
+<p>函数式接口的概念是：一个接口如果只有一个抽象方法，但可以有多个非抽象方法（有 default 方法），那么这个接口就是一个函数式接口。  </p>
+<p>我们可以将一个函数式接口通过箭头函数来实现它的抽象方法。基本用法如下：  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里首先定义一个函数式接口。</span></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Comparator</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">int</span> <span class="title">compare</span><span class="params">(<span class="keyword">int</span> t1, <span class="keyword">int</span> t2)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> num1 = <span class="number">1</span>, num2 = <span class="number">2</span>;</span><br><span class="line">    <span class="comment">// 这里将箭头函数赋值给一个函数式接口</span></span><br><span class="line">    Comparator numCompare = (num1, num2) =&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span>(num1&gt;num2) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(num1&lt;num2) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(numCompare.compare(num1, num2));</span><br><span class="line">    foo(numCompare);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们也可以在一个方法中接受一个函数式接口形参</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">(Comparator comparator)</span> </span>&#123;</span><br><span class="line">    System.out.println(comparator.compare(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="方法和构造函数引用"><a href="#方法和构造函数引用" class="headerlink" title="方法和构造函数引用"></a>方法和构造函数引用</h2><p>箭头函数可以以字面量的形式实现函数式接口。如果一个方法或者构造函数符合函数式接口的实现，那么我们可以将它的引用赋值给这个函数式接口。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里假如 A 类中有一个符合上节的函数式接口的方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">intCompare</span><span class="params">(<span class="keyword">int</span> n1, <span class="keyword">int</span> n2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(num1&gt;num2) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(num1&lt;num2) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args[])</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 这里将 A 类中的 intComapre 方法赋值给 numCompare</span></span><br><span class="line">        Comparator numCompare = A::intCompare;</span><br><span class="line">        System.out.println(numCompare.compare(<span class="number">1</span>, <span class="number">2</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正如代码中一样，Java 8 允许我们以 <code>::</code> 关键字传递方法或者构造函数的引用。关于构造函数，我们可以通过以 <code>Class::new</code> 的形式将一个符合条件的构造函数传递给一个工厂接口。如果一个类有多个构造方法，编译器会选择最合适的那一个作为引用传递。  </p>
+<h2 id="内建的函数式接口"><a href="#内建的函数式接口" class="headerlink" title="内建的函数式接口"></a>内建的函数式接口</h2><p>Java 8 中内建了很多函数式接口，同时之前很多诸如 Runnable, Comparator 等接口也加入了 <code>@FunctionalInterface</code> 的注解。这里介绍几个使用的比较多的内建函数式接口。  </p>
+<ol>
+<li><p>Predicate（断言）<br>这个接口是一个只有一个参数的返回布尔类型的 <strong>断言式</strong> 接口。该接口用于判断命题的真假，它内置了一系列默认方法用于组成复杂的与或非结构。<br>该接口的源码如下:  </p>
+<pre><code class="java"><span class="keyword">package</span> java.util.function;
+<span class="keyword">import</span> java.util.Objects;
+
+<span class="meta">@FunctionalInterface</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Predicate</span>&lt;<span class="title">T</span>&gt; </span>{
+
+    <span class="comment">// 该方法是接受一个传入类型,返回一个布尔值.此方法应用于判断.</span>
+    <span class="function"><span class="keyword">boolean</span> <span class="title">test</span><span class="params">(T t)</span></span>;
+
+    <span class="comment">//and方法与关系型运算符"&amp;&amp;"相似，两边都成立才返回true</span>
+    <span class="function"><span class="keyword">default</span> Predicate&lt;T&gt; <span class="title">and</span><span class="params">(Predicate&lt;? <span class="keyword">super</span> T&gt; other)</span> </span>{
+        Objects.requireNonNull(other);
+        <span class="keyword">return</span> (t) -&gt; test(t) &amp;&amp; other.test(t);
+    }
+    <span class="comment">// 与关系运算符"!"相似，对判断进行取反</span>
+    <span class="function"><span class="keyword">default</span> Predicate&lt;T&gt; <span class="title">negate</span><span class="params">()</span> </span>{
+        <span class="keyword">return</span> (t) -&gt; !test(t);
+    }
+    <span class="comment">//or方法与关系型运算符"||"相似，两边只要有一个成立就返回true</span>
+    <span class="function"><span class="keyword">default</span> Predicate&lt;T&gt; <span class="title">or</span><span class="params">(Predicate&lt;? <span class="keyword">super</span> T&gt; other)</span> </span>{
+        Objects.requireNonNull(other);
+        <span class="keyword">return</span> (t) -&gt; test(t) || other.test(t);
+    }
+<span class="comment">// 该方法接收一个Object对象,返回一个Predicate类型.此方法用于判断第一个test的方法与第二个test方法相同(equal).</span>
+    <span class="keyword">static</span> &lt;T&gt; <span class="function">Predicate&lt;T&gt; <span class="title">isEqual</span><span class="params">(Object targetRef)</span> </span>{
+        <span class="keyword">return</span> (<span class="keyword">null</span> == targetRef)
+                ? Objects::isNull
+                : object -&gt; targetRef.equals(object);
+    }
+}  </code></pre>
+<p> 这里是使用示例：  </p>
+<pre><code class="java"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>{
+    <span class="comment">// 这里是 Predicates 的使用示例</span>
+    <span class="comment">// Predicate 接口用于进行对象的判断</span>
+    Predicate&lt;String&gt; isNullString = String::isEmpty;
+    <span class="comment">// negate() 方法是该接口用于“非”运算的默认实现</span>
+    System.out.println(isNullString.negate().test(<span class="string">""</span>));
+    <span class="comment">// and() 方法是该接口用于“与”运算的默认实现</span>
+    <span class="comment">// 这里要求测试的字符串不是空串且以“https://”开头</span>
+    System.out.println(isNullString.negate().and(t-&gt;t.startsWith(<span class="string">"https://"</span>)).test(<span class="string">"https://www.baidu.com"</span>));
+    <span class="comment">// or() 方法是该接口用于“或运算”</span>
+    <span class="comment">// 这里要求测试的字符串是一个“”串或者仅有空格符的串</span>
+    System.out.println(isNullString.or(t-&gt;t.trim().equals(<span class="string">""</span>)).test(<span class="string">""</span>));
+}</code></pre>
+</li>
+<li><p>Function（函数计算）<br>这个接口接收一个参数并生成结果。它一系列默认方法可以将多个函数连接在一起。<br> 下面是源码和解析：   </p>
+<pre><code class="java"><span class="keyword">package</span> java.util.function;
+<span class="keyword">import</span> java.util.Objects;
+
+<span class="meta">@FunctionalInterface</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>{
+
+    <span class="comment">//将Function对象应用到输入的参数上，然后返回计算结果。</span>
+    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span>;
+    <span class="comment">//将两个Function整合，并返回一个能够执行两个Function对象功能的Function对象。</span>
+    <span class="keyword">default</span> &lt;V&gt; <span class="function">Function&lt;V, R&gt; <span class="title">compose</span><span class="params">(Function&lt;? <span class="keyword">super</span> V, ? extends T&gt; before)</span> </span>{
+        Objects.requireNonNull(before);
+        <span class="keyword">return</span> (V v) -&gt; apply(before.apply(v));
+    }
+    <span class="comment">// 让一个函数调用的结果作为另一个函数的参数并返回结果</span>
+    <span class="keyword">default</span> &lt;V&gt; <span class="function">Function&lt;T, V&gt; <span class="title">andThen</span><span class="params">(Function&lt;? <span class="keyword">super</span> R, ? extends V&gt; after)</span> </span>{
+        Objects.requireNonNull(after);
+        <span class="keyword">return</span> (T t) -&gt; after.apply(apply(t));
+    }
+
+    <span class="keyword">static</span> &lt;T&gt; <span class="function">Function&lt;T, T&gt; <span class="title">identity</span><span class="params">()</span> </span>{
+        <span class="keyword">return</span> t -&gt; t;
+    }
+}</code></pre>
+<p> 用例： </p>
+<pre><code class="java"><span class="comment">// Function 接口用于函数运算的连接组合运算</span>
+Function&lt;String, Integer&gt; stringToInt = Integer::parseInt;
+System.out.println(stringToInt.apply(<span class="string">"123"</span>) + <span class="number">1</span>);
+<span class="comment">// compose() 方法用于将一个前置函数的返回值作为调用函数的参数进行运算</span>
+<span class="comment">// 这里是首先将字符串去掉首尾的空串，再进行数字转换</span>
+System.out.println(stringToInt.compose(s -&gt; s.toString().trim()).apply(<span class="string">"   123   "</span>));
+<span class="comment">// andThen() 方法用于将调用函数的返回值作为后置函数的参数进行运算</span>
+<span class="comment">// 这里首先将字符串去掉首位空格，进行数字转换后将得到的数字加一</span>
+System.out.println(stringToInt.compose(s -&gt; s.toString().trim()).andThen(integer -&gt; integer + <span class="number">1</span>).apply(<span class="string">" 123 "</span>));</code></pre>
+</li>
+</ol>
+<h2 id="Optional-接口（防止-NullPointerException）"><a href="#Optional-接口（防止-NullPointerException）" class="headerlink" title="Optional 接口（防止 NullPointerException）"></a>Optional 接口（防止 NullPointerException）</h2><p>NullPointerException 是 Java 中臭名昭著的一个异常了。因为程序的变化性，发生这个异常很难去跟踪到它进而调试程序。  </p>
+<p>为了解决这个问题，我们经常性的做法是为我们的对象增加一个空对象，利用空对象模式来避免发生这个异常。但是这样的做法会导致程序的臃肿，我们不可能为每一个对象都去定义一个空对象。  </p>
+<p>Java 8 中，增加了 Optional 接口来解决这个问题。Optional 是一个容器，其值可能是 null 也可能不是 null。它有一系列方法帮助我们更好的对值进行返回操作。  </p>
+<p>下面是 Optional 的基本使用：  </p>
+<pre><code class="java"><span class="comment">// of() : 为非 null 的值创建一个 Optional 对象，如果指定的值是 null，则抛出 NullPointerException</span>
+Optional&lt;String&gt; optional = Optional.of(<span class="string">"hello"</span>);
+<span class="comment">// ofNullable：为一个指定的值创建一个 Optional 对象，如果指定的值为 null，则返回一个空的 Optional 对象</span>
+<span class="comment">// isPresent(): 判断当前容器中的值是否为 null，不为空则返回 true，反之返回 false</span>
+optional.isPresent() <span class="comment">// true</span>
+<span class="comment">// get(): 如果 Optional 有值则将其返回，否则抛出 NoSuchElementException</span>
+optional.get() <span class="comment">// "hello"</span>
+<span class="comment">// orElse(some value): 如果 Optional 有值则将其返回，否则返回指定的值</span>
+optionl.orElse(<span class="string">"world"</span>) <span class="comment">// "hello"</span>
+<span class="comment">// ifPresent(Consumer): 如果 Optional 有值则对这个值调用传入的 Consumer，否则不做处理</span>
+optional.ifPresent(s-&gt;System.out.println(s.trim())); <span class="comment">// "hello"</span></code></pre>
+<p>更多的 Optional 方法请参考 jdk 文档。  </p>
+<p>下面是使用 Optional 来处理参数的 null 值判断处理的程序：  </p>
+<pre><code class="java"><span class="function"><span class="keyword">public</span> String <span class="title">parseString</span><span class="params">(String target)</span> </span>{
+    <span class="keyword">return</span> Optional.ofNullable(target)
+                   .map(target-&gt;<span class="keyword">new</span> StringBuffer(target).reverse().toString())
+                   .orElse(<span class="string">"Unknow"</span>);
+}
+<span class="comment">// 不适用 Optional 这段程序一般这样写</span>
+<span class="function"><span class="keyword">public</span> String <span class="title">parseString</span><span class="params">(String target)</span> </span>{
+    <span class="keyword">if</span> (target == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="string">"Unknow"</span>;
+    <span class="keyword">return</span> <span class="keyword">new</span> StringBuffer(target).reverse().toString();
+}</code></pre>
+<p>设计 Optional 的目的在于让程序流自动处理未知传入值，它提供了把若干依赖前一步结果的处理结合起来的途径。  </p>
+<p>下面是使用 Optional 场景的应用建议：  </p>
+<ol>
+<li>适用层级处理（依赖上一步操作）的场合。</li>
+<li>产生对象的方法若可能产生 null ，则可以用 Optional 包装。</li>
+<li>尽可能延后处理 null 的时机，在过程中使用 Optional 以保持不确定性。</li>
+<li>尽量避免使用 Optional 作为字段类型。  </li>
+</ol>
+<h2 id="Stream（流操作）"><a href="#Stream（流操作）" class="headerlink" title="Stream（流操作）"></a>Stream（流操作）</h2>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/yukino-blog/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/yukino-blog/Internet/HTTP/http-basic/" rel="prev" title="HTTP基础">
+      <i class="fa fa-chevron-left"></i> HTTP基础
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lambda-表达式和函数式接口"><span class="nav-number">1.</span> <span class="nav-text">Lambda 表达式和函数式接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法和构造函数引用"><span class="nav-number">2.</span> <span class="nav-text">方法和构造函数引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内建的函数式接口"><span class="nav-number">3.</span> <span class="nav-text">内建的函数式接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Optional-接口（防止-NullPointerException）"><span class="nav-number">4.</span> <span class="nav-text">Optional 接口（防止 NullPointerException）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stream（流操作）"><span class="nav-number">5.</span> <span class="nav-text">Stream（流操作）</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Yukino Li</p>
+  <div class="site-description" itemprop="description">a blogging site to log my study and life</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/yukino-blog/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/yukino-blog/categories/">
+          
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/yukino-blog/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BigtigerGG" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BigtigerGG" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1602006646@qq.com" title="E-Mail → mailto:1602006646@qq.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yukino Li</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/yukino-blog/lib/anime.min.js"></script>
+  <script src="/yukino-blog/lib/velocity/velocity.min.js"></script>
+  <script src="/yukino-blog/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/yukino-blog/js/utils.js"></script>
+
+<script src="/yukino-blog/js/motion.js"></script>
+
+
+<script src="/yukino-blog/js/schemes/pisces.js"></script>
+
+
+<script src="/yukino-blog/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/yukino-blog/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
