@@ -15,28 +15,27 @@ categories:
 ## Class 文件结构  
 
 类文件的结构如下：  
-
 ```
-    // u 代表一个字节，例如 u4 代表4个字节
-    ClassFile {
-        u4             magic; //Class 文件的标志
-        u2             minor_version;//Class 的小版本号
-        u2             major_version;//Class 的大版本号
-        u2             constant_pool_count;//常量池的数量
-        cp_info        constant_pool[constant_pool_count-1];//常量池
-        u2             access_flags;//Class 的访问标记
-        u2             this_class;//当前类
-        u2             super_class;//父类
-        u2             interfaces_count;//接口
-        u2             interfaces[interfaces_count];//一个类可以实现多个接口
-        u2             fields_count;//Class 文件的字段属性
-        field_info     fields[fields_count];//一个类会可以有个字段
-        u2             methods_count;//Class 文件的方法数量
-        method_info    methods[methods_count];//一个类可以有个多个方法
-        u2             attributes_count;//此类的属性表中的属性数
-        attribute_info attributes[attributes_count];//属性表集合
-    }
-``` 
+// u 代表一个字节，例如 u4 代表4个字节
+ClassFile {
+    u4             magic; //Class 文件的标志
+    u2             minor_version;//Class 的小版本号
+    u2             major_version;//Class 的大版本号
+    u2             constant_pool_count;//常量池的数量
+    cp_info        constant_pool[constant_pool_count-1];//常量池
+    u2             access_flags;//Class 的访问标记
+    u2             this_class;//当前类
+    u2             super_class;//父类
+    u2             interfaces_count;//接口
+    u2             interfaces[interfaces_count];//一个类可以实现多个接口
+    u2             fields_count;//Class 文件的字段属性
+    field_info     fields[fields_count];//一个类会可以有个字段
+    u2             methods_count;//Class 文件的方法数量
+    method_info    methods[methods_count];//一个类可以有个多个方法
+    u2             attributes_count;//此类的属性表中的属性数
+    attribute_info attributes[attributes_count];//属性表集合
+}
+```
 
 ## 类加载过程  
 
@@ -70,42 +69,42 @@ JVM 内置了三个最重要的类加载器，它们分别是：
 双亲委派的源码分析：  
 
 ```java
-    private final ClassLoader parent; 
+private final ClassLoader parent; 
 protected Class<?> loadClass(String name, boolean resolve)
         throws ClassNotFoundException
-    {
-        synchronized (getClassLoadingLock(name)) {
-            // 首先，检查请求的类是否已经被加载过
-            Class<?> c = findLoadedClass(name);
+{
+    synchronized (getClassLoadingLock(name)) {
+        // 首先，检查请求的类是否已经被加载过
+        Class<?> c = findLoadedClass(name);
+        if (c == null) {
+            long t0 = System.nanoTime();
+            try {
+                if (parent != null) {//父加载器不为空，调用父加载器loadClass()方法处理
+                    c = parent.loadClass(name, false);
+                } else {//父加载器为空，使用启动类加载器 BootstrapClassLoader 加载
+                    c = findBootstrapClassOrNull(name);
+                }
+            } catch (ClassNotFoundException e) {
+                //抛出异常说明父类加载器无法完成加载请求
+            }
+            
             if (c == null) {
-                long t0 = System.nanoTime();
-                try {
-                    if (parent != null) {//父加载器不为空，调用父加载器loadClass()方法处理
-                        c = parent.loadClass(name, false);
-                    } else {//父加载器为空，使用启动类加载器 BootstrapClassLoader 加载
-                        c = findBootstrapClassOrNull(name);
-                    }
-                } catch (ClassNotFoundException e) {
-                   //抛出异常说明父类加载器无法完成加载请求
-                }
-                
-                if (c == null) {
-                    long t1 = System.nanoTime();
-                    //自己尝试加载
-                    c = findClass(name);
+                long t1 = System.nanoTime();
+                //自己尝试加载
+                c = findClass(name);
 
-                    // this is the defining class loader; record the stats
-                    sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
-                    sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
-                    sun.misc.PerfCounter.getFindClasses().increment();
-                }
+                // this is the defining class loader; record the stats
+                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
+                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+                sun.misc.PerfCounter.getFindClasses().increment();
             }
-            if (resolve) {
-                resolveClass(c);
-            }
-            return c;
         }
+        if (resolve) {
+            resolveClass(c);
+        }
+        return c;
     }
+}
 ```
 
 双亲委派模型的好处：  
