@@ -46,20 +46,20 @@
   };
 </script>
 
-  <meta name="description" content="Vue Router 进阶这篇文章包含 Vue Router 的进阶内容，以及自己的经验总结。   导航守卫在应用中的页面 URL 改变的时候，Vue Router 提供了一系列的钩子函数来处理路由改变过程中需要处理的逻辑。这些钩子函数就是导航守卫，这里的导航是指：当前的路由发生了改变（也就是说页面的 URL 发生了改变）。   需要注意的是，路由中参数，或者查询的改变并不会影响进入&#x2F;离开的导航守">
+  <meta name="description" content="HTTP 概述">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Vue Router 进阶">
-<meta property="og:url" content="https://bigtigergg.github.io/yukino-blog/Vue/Vue-Router/vue-router-advanced/index.html">
+<meta property="og:title" content="HTTP基础">
+<meta property="og:url" content="https://bigtigergg.github.io/yukino-blog/Internet/HTTP/http-basic/index.html">
 <meta property="og:site_name" content="Yukino&#39;s Blog">
-<meta property="og:description" content="Vue Router 进阶这篇文章包含 Vue Router 的进阶内容，以及自己的经验总结。   导航守卫在应用中的页面 URL 改变的时候，Vue Router 提供了一系列的钩子函数来处理路由改变过程中需要处理的逻辑。这些钩子函数就是导航守卫，这里的导航是指：当前的路由发生了改变（也就是说页面的 URL 发生了改变）。   需要注意的是，路由中参数，或者查询的改变并不会影响进入&#x2F;离开的导航守">
+<meta property="og:description" content="HTTP 概述">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-01-26T10:35:38.000Z">
+<meta property="article:published_time" content="2020-04-23T04:57:59.000Z">
 <meta property="article:modified_time" content="2020-04-23T05:56:26.811Z">
 <meta property="article:author" content="Yukino Li">
-<meta property="article:tag" content="Vue Router">
+<meta property="article:tag" content="HTTP">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://bigtigergg.github.io/yukino-blog/Vue/Vue-Router/vue-router-advanced/">
+<link rel="canonical" href="https://bigtigergg.github.io/yukino-blog/Internet/HTTP/http-basic/">
 
 
 <script id="page-configurations">
@@ -71,7 +71,7 @@
   };
 </script>
 
-  <title>Vue Router 进阶 | Yukino's Blog</title>
+  <title>HTTP基础 | Yukino's Blog</title>
   
 
 
@@ -216,7 +216,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Vue/Vue-Router/vue-router-advanced/">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Internet/HTTP/http-basic/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
@@ -229,7 +229,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Vue Router 进阶
+          HTTP基础
         </h1>
 
         <div class="post-meta">
@@ -238,30 +238,24 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2020-01-26 18:35:38" itemprop="dateCreated datePublished" datetime="2020-01-26T18:35:38+08:00">2020-01-26</time>
+              <time title="创建时间：2020-04-23 12:57:59 / 修改时间：13:56:26" itemprop="dateCreated datePublished" datetime="2020-04-23T12:57:59+08:00">2020-04-23</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-23 13:56:26" itemprop="dateModified" datetime="2020-04-23T13:56:26+08:00">2020-04-23</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/yukino-blog/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
+                  <a href="/yukino-blog/categories/Internet/" itemprop="url" rel="index">
+                    <span itemprop="name">Internet</span>
                   </a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/yukino-blog/categories/Vue/Vue-Router/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue Router</span>
+                  <a href="/yukino-blog/categories/Internet/HTTP/" itemprop="url" rel="index">
+                    <span itemprop="name">HTTP</span>
                   </a>
                 </span>
             </span>
@@ -277,81 +271,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="Vue-Router-进阶"><a href="#Vue-Router-进阶" class="headerlink" title="Vue Router 进阶"></a><strong>Vue Router 进阶</strong></h1><p>这篇文章包含 Vue Router 的进阶内容，以及自己的经验总结。  </p>
-<h2 id="导航守卫"><a href="#导航守卫" class="headerlink" title="导航守卫"></a><strong>导航守卫</strong></h2><p>在应用中的页面 URL 改变的时候，Vue Router 提供了一系列的钩子函数来处理路由改变过程中需要<br>处理的逻辑。这些钩子函数就是导航守卫，这里的导航是指：<em>当前的路由发生了改变（也就是说页<br>面的 URL 发生了改变）</em>。  </p>
-<p>需要注意的是，<strong>路由中参数，或者查询的改变并不会影响进入/离开的导航守卫</strong>。这时想要应对这些<br>变化，需要观察 <code>$route</code> 对象或者使用 <code>beforeRouteUpdate</code> 导航守卫。  </p>
-<p>导航守卫根据作用域的不同分为：  </p>
-<ul>
-<li>全局守卫</li>
-<li>路由独享守卫</li>
-<li>组件内守卫</li>
-</ul>
-<h2 id="全局守卫"><a href="#全局守卫" class="headerlink" title="全局守卫"></a><strong>全局守卫</strong></h2><p>全局守卫在所有的路由变换时都可以被触发。按照触发时间不同被分为：  </p>
-<ul>
-<li>全局前置守卫</li>
-<li>全局解析守卫</li>
-<li>全局后置钩子  </li>
-</ul>
-<h3 id="全局前置守卫"><a href="#全局前置守卫" class="headerlink" title="全局前置守卫"></a><strong>全局前置守卫</strong></h3><p>使用 <code>router.beforeEach()</code> 可以注册一个全局前置守卫：  </p>
-<pre><code>const router = new VueRouter({
-    routes
-})
-router.beforeEach((to, from, next)=&gt;{
-    // ...
-})</code></pre><p>可以注册一个或者多个这样的守卫，当一个导航被触发的时候，这些守卫按照创建的顺序依次被调用<br>守卫们时异步解析执行，在所有守卫解析完成前路由的变化过程会一直处于 <strong>等待中</strong><br>每一个守卫方法接受三个参数：  </p>
-<ul>
-<li><code>to:Route</code> : 即将要进入的 路由对象  </li>
-<li><code>from:Route</code> : 当前导航正要离开的路由对象  </li>
-<li><code>next : Function</code> : <strong>这个方法必须被调用从而保证这个钩子被成功解析</strong>  <ul>
-<li><code>next()</code>:进行管道中的下一个钩子。如果所有的导航钩子执行完了，则导航的状态则是： <strong>conformed</strong>。</li>
-<li><code>next(false)</code> ：中断当前的导航。如果当前的 URL 改变了，URL 会被重置到 <code>from</code> 路由对应的位置。  </li>
-<li><code>next(&#39;/&#39;)</code> 或者 <code>next({path:&#39;/&#39;})</code> : 跳转到一个不同的地址，当前的导航被中断，然后进入一个新的导航。</li>
-<li><code>next(Error)</code> ： 传入一个 <code>Error</code> 实例， 导航被终止并将错误传递到 <code>router.onError()</code> 注册过的回调函数。  </li>
-</ul>
-</li>
-</ul>
-<h3 id="全局解析守卫"><a href="#全局解析守卫" class="headerlink" title="全局解析守卫"></a><strong>全局解析守卫</strong></h3><p>使用 <code>router.beforeResolve</code> 来注册一个全局解析守卫。它的作用和全局前置守卫类似，唯一的区别是全局解析守卫的触发时间是在当前导航被确认之前，在所有的组件和组件内守卫解析完毕时才被调用。  </p>
-<h3 id="全局后置守卫"><a href="#全局后置守卫" class="headerlink" title="全局后置守卫"></a><strong>全局后置守卫</strong></h3><p>顾名思义，全局后置守卫在当前的路由离开的时候被触发。这种守卫不会接受 <code>next</code> 函数作为回调，也不会改变导航本身。  </p>
-<h2 id="路由独享的守卫"><a href="#路由独享的守卫" class="headerlink" title="路由独享的守卫"></a><strong>路由独享的守卫</strong></h2><p>在路由对象中可以配置这个路由独享的导航守卫：  </p>
-<pre><code>const router = new VueRouter({
-    routes: [
-        {
-            name:&apos;foo&apos;,
-            path:&apos;/foo&apos;,
-            component:Foo,
-            beforeEnter: (to, from, next)=&gt;{
-                //...
-            }
-        }
-    ]
-})</code></pre><h2 id="组件内的守卫"><a href="#组件内的守卫" class="headerlink" title="组件内的守卫"></a><strong>组件内的守卫</strong></h2><p>可以在组件内直接定义这些导航守卫：  </p>
-<ul>
-<li><code>beforeRouterEnter</code></li>
-<li><code>beforeRouterUpdate</code></li>
-<li><code>beforeRouterLeave</code></li>
-</ul>
-<p><code>beforeRouterEnter</code> 守卫不能直接访问组件实例 <code>this</code> ，因为在触发这个钩子函数的时候，这个组件还没有被创建。  </p>
-<p>不过可以在这个钩子的 <code>next</code> 参数中接受一个 <code>vm</code> 组件对象作为当前组件实例。在导航被确认的时候执行这个回调函数：  </p>
-<pre><code>beforeEnter: (to, from, next)=&gt;{
-    next(vm=&gt;{
-        // 这个vm作为当前的组件实例
-    })
-}</code></pre><p>其他两个组件内守卫因为被触发的时候组件已经被创建，所以可以访问 <code>this</code>。</p>
-<h2 id="完整的导航解析过程"><a href="#完整的导航解析过程" class="headerlink" title="完整的导航解析过程"></a><strong>完整的导航解析过程</strong></h2><ol>
-<li>导航被触发。</li>
-<li>在失活的组件里调用离开守卫。</li>
-<li>调用全局的 beforeEach 守卫。</li>
-<li>在重用的组件里调用 beforeRouteUpdate 守卫 (2.2+)。</li>
-<li>在路由配置里调用 beforeEnter。</li>
-<li>解析异步路由组件。</li>
-<li>在被激活的组件里调用 beforeRouteEnter。</li>
-<li>调用全局的 beforeResolve 守卫 (2.5+)。</li>
-<li>导航被确认。</li>
-<li>用全局的 afterEach 钩子。</li>
-<li>触发 DOM 更新。</li>
-<li>用创建好的实例调用 beforeRouteEnter 守卫中传给 next 的回调函数</li>
-</ol>
-
+        <h2 id="HTTP-概述"><a href="#HTTP-概述" class="headerlink" title="HTTP 概述"></a>HTTP 概述</h2>
     </div>
 
     
@@ -360,7 +280,7 @@ router.beforeEach((to, from, next)=&gt;{
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/yukino-blog/tags/Vue-Router/" rel="tag"># Vue Router</a>
+              <a href="/yukino-blog/tags/HTTP/" rel="tag"># HTTP</a>
           </div>
 
         
@@ -369,13 +289,10 @@ router.beforeEach((to, from, next)=&gt;{
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/yukino-blog/Vue/Vue-Base/render-and-JSX/" rel="prev" title="渲染函数和 JSX">
-      <i class="fa fa-chevron-left"></i> 渲染函数和 JSX
+    <a href="/yukino-blog/JVM/ClassFile/jvm-classfile/" rel="prev" title="jvm-类文件">
+      <i class="fa fa-chevron-left"></i> jvm-类文件
     </a></div>
-      <div class="post-nav-item">
-    <a href="/yukino-blog/Vue/Vuex/vuex-base/" rel="next" title="Vuex 基础">
-      Vuex 基础 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -435,7 +352,7 @@ router.beforeEach((to, from, next)=&gt;{
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Vue-Router-进阶"><span class="nav-number">1.</span> <span class="nav-text">Vue Router 进阶</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#导航守卫"><span class="nav-number">1.1.</span> <span class="nav-text">导航守卫</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全局守卫"><span class="nav-number">1.2.</span> <span class="nav-text">全局守卫</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#全局前置守卫"><span class="nav-number">1.2.1.</span> <span class="nav-text">全局前置守卫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全局解析守卫"><span class="nav-number">1.2.2.</span> <span class="nav-text">全局解析守卫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全局后置守卫"><span class="nav-number">1.2.3.</span> <span class="nav-text">全局后置守卫</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#路由独享的守卫"><span class="nav-number">1.3.</span> <span class="nav-text">路由独享的守卫</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件内的守卫"><span class="nav-number">1.4.</span> <span class="nav-text">组件内的守卫</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整的导航解析过程"><span class="nav-number">1.5.</span> <span class="nav-text">完整的导航解析过程</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-概述"><span class="nav-number">1.</span> <span class="nav-text">HTTP 概述</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

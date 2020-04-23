@@ -213,6 +213,150 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Vue/Vue-Base/render-and-JSX/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/yukino-blog/images/avatar.gif">
+      <meta itemprop="name" content="Yukino Li">
+      <meta itemprop="description" content="a blogging site to log my study and life">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yukino's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/yukino-blog/Vue/Vue-Base/render-and-JSX/" class="post-title-link" itemprop="url">渲染函数和 JSX</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-25 21:55:00" itemprop="dateCreated datePublished" datetime="2020-01-25T21:55:00+08:00">2020-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-23 13:56:26" itemprop="dateModified" datetime="2020-04-23T13:56:26+08:00">2020-04-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/yukino-blog/categories/Vue/Vue-Base/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue Base</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="渲染函数和-JSX"><a href="#渲染函数和-JSX" class="headerlink" title="渲染函数和 JSX"></a><strong>渲染函数和 JSX</strong></h1><p>vascript 框架，这也是 Vue 简单易学的原因。然而有些时候，我们需要<br>Javascript 完全编程的能力，可以使用 Vue 提供的 <strong>渲染函数（render）</strong> 来做到这一点。</p>
+<h2 id="节点、树以及虚拟-DOM"><a href="#节点、树以及虚拟-DOM" class="headerlink" title="节点、树以及虚拟 DOM"></a><strong>节点、树以及虚拟 DOM</strong></h2><p>Vue 使用的元素（组件）节点和原生的 DOM 节点是不一样的，这个节点被 Vue 加工过，包含了<br>这个节点的和它的子节点的信息。 这样的节点叫做”虚拟节点“（virtual node），所谓的虚拟 DOM<br>就是由这些虚拟节点构成的 DOM 树所构成。</p>
+<h3 id="createElement-参数"><a href="#createElement-参数" class="headerlink" title="createElement 参数"></a><strong><code>createElement</code></strong> 参数</h3><p>在 <code>render</code> 函数中，通常使用 <code>createElement</code> 函数来创建虚拟节点，下面是这个函数所接受的参数  </p>
+<pre><code>/**
+* @return {VNode}
+*/
+createElement(
+    /**
+    * @param {String | Object | Function}
+    * 一个 Html 标签名、组件对象或者解析了上述任意
+    * 一种的 async 函数，必填项
+    */
+    ’div&apos;,
+    /**
+    * @param {Object}
+    * 一个对应模板属性的数据对象，例如 props，data 等，可选
+    */
+    {
+        // props: {}    
+        // data: function(){}
+    },
+    /**
+    * @param {String | Array}
+    * 子级虚拟节点列表
+    * 也可以由子级文本字符串构成
+    */
+    [
+        &quot;strings&quot;,
+        // createElement()
+    ]
+)</code></pre><p>需要<strong>注意</strong>的是，一个组件的中的所有 VNode 必须是唯一的，也就是所有的 VNode 都应该是一个独立<br>对象。当我们想要渲染多个重复的 VNode 的时候，我们可以使用工厂函数，例如：</p>
+<pre><code>createElement(
+    &apos;div&apos;,
+    Array.apply(null, {length:20}) 
+        .map(()=&gt;{
+            return createElement(
+                &apos;p&apos;,
+                &apos;hi&apos;
+            )
+        })
+)</code></pre><h2 id="使用插件"><a href="#使用插件" class="headerlink" title="使用插件"></a><strong>使用插件</strong></h2><p><code>Vue.use()</code> 使用插件。需要在调用 <code>new Vue()</code> 启动应用之前完成。</p>
+<h2 id="使用过滤器"><a href="#使用过滤器" class="headerlink" title="使用过滤器"></a><strong>使用过滤器</strong></h2><p>Vue 可以自定义过滤器，用于一些常见的文本格式化。过滤器一般用在两个地方: 模板表达式中，和<code>v-bind</code><br>表达式中。过滤器应该被添加在表达式的尾部，由管道符号（<code>|</code>）表示。  </p>
+<p>例如：</p>
+<pre><code>{{ message | capitalize}} &lt;!-- 首字母大写 --&gt;
+
+&lt;div v-bind:id = &quot;rawId | formatId&quot;&gt;</code></pre><p>过滤器可以被定义在 Vue 实例的 <code>filters</code> 选项下作为一个组件过滤器：</p>
+<pre><code>filters: {
+    capitalize: function(value){
+        if(!value) return &apos;&apos;;
+        value = value.toString();
+        return value.charAt(0).toUppercase() + value.slice(1);
+    }
+}</code></pre><p>也可以被定义为全局过滤器：</p>
+<pre><code>Vue.filter(&apos;capitalize&apos;, function(value){
+    if(!value) return &apos;&apos;;
+        value = value.toString();
+        return value.charAt(0).toUppercase() + value.slice(1);
+})</code></pre><p>需要<strong>注意</strong>的是  </p>
+<ul>
+<li>当全局过滤器和局部过滤器重名的时候，会优先使用局部过滤器</li>
+<li>过滤器会始终将表达式的值作为第一个参数</li>
+<li>过滤器可以接受参数，例如：<code>message | capitalize(arg0, arg1)</code>, 但是该函数的第一个参数是 <code>message</code></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://bigtigergg.github.io/yukino-blog/Vue/Vue-Router/vue-router-base/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -244,7 +388,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-22 22:15:16" itemprop="dateModified" datetime="2020-04-22T22:15:16+08:00">2020-04-22</time>
+                <time title="修改时间：2020-04-23 13:56:26" itemprop="dateModified" datetime="2020-04-23T13:56:26+08:00">2020-04-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -595,7 +739,7 @@ const router = new VueRouter({
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-22 22:15:16" itemprop="dateModified" datetime="2020-04-22T22:15:16+08:00">2020-04-22</time>
+                <time title="修改时间：2020-04-23 13:56:26" itemprop="dateModified" datetime="2020-04-23T13:56:26+08:00">2020-04-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -725,7 +869,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-22 22:15:16" itemprop="dateModified" datetime="2020-04-22T22:15:16+08:00">2020-04-22</time>
+                <time title="修改时间：2020-04-23 13:56:26" itemprop="dateModified" datetime="2020-04-23T13:56:26+08:00">2020-04-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -857,7 +1001,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-22 22:15:16" itemprop="dateModified" datetime="2020-04-22T22:15:16+08:00">2020-04-22</time>
+                <time title="修改时间：2020-04-23 13:56:26" itemprop="dateModified" datetime="2020-04-23T13:56:26+08:00">2020-04-23</time>
               </span>
 
           
@@ -984,7 +1128,7 @@ new Vue({el:&quot;component-demo&quot;});</code></pre><p>组件是可复用的 V
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-22 22:15:16" itemprop="dateModified" datetime="2020-04-22T22:15:16+08:00">2020-04-22</time>
+                <time title="修改时间：2020-04-23 13:56:26" itemprop="dateModified" datetime="2020-04-23T13:56:26+08:00">2020-04-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1094,7 +1238,7 @@ this.myMethod is not a function</code> 之类的错误。</p>
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-22 22:15:16" itemprop="dateModified" datetime="2020-04-22T22:15:16+08:00">2020-04-22</time>
+                <time title="修改时间：2020-04-23 13:56:26" itemprop="dateModified" datetime="2020-04-23T13:56:26+08:00">2020-04-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1444,20 +1588,20 @@ template： `
       <div class="site-state-item site-state-posts">
           <a href="/yukino-blog/archives/">
         
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/yukino-blog/categories/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/yukino-blog/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
