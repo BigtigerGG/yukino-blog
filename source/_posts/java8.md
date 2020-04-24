@@ -217,3 +217,70 @@ public String parseString(String target) {
 
 ## Stream（流操作）  
 
+Java 8 中，为了增强对序列的操作，引入了流的概念。流相当于一个迭代器，但是它有更多的 API 可供操作，同时提供了并发流利用多线程加快序列的操作速度。  
+
+流操作的基本用法如下：  
+
+从数据源中获取流 -> 数据转换 -> 执行操作 -> 获取最终结果。流操作分为中间操作和最终操作，中间操作返回处理后的流对象，可以供下一个中间操作或者最终操作调用。也就意味着我们可以对流进行一系列的链式操作，但是这一系列的操作中只能有一个最终操作。  
+
+可以作为数据源的对象主要有：  
+- Collection 或 数组
+    - Collection.stream() 
+    - Collection.parallelStream()（并行流）
+    - Arrays.stream(T array)
+    - Stream.of(T... array)
+- BufferedReader
+    - BufferedReader.lines()
+- 静态工厂
+    - java.util.IntStream.range()
+    - java.nio.file.Files.walk()
+
+下面是流操作的用例：  
+
+```java
+// Stream 表示应用在一组元素上，一次性执行的操作序列
+// 流上的操作分为：中间操作和最终操作，中间操作返回处理好的 Stream
+// 我们可以将多个操作一次串起来来达到我们的目的
+List<String> list = Arrays.asList("http://www.baidu.com", "https://www.baidu.com", "https://www.bilibili.com");
+// 1. 利用流进行过滤操作，中间操作
+// filter(Predicate) 提供一个 Predicate 接口可以对流进行过滤
+list.stream().filter(s -> s.startsWith("https://"))
+                .forEach(System.out::println);
+// 2. 利用流进行排序操作，中间操作
+// sorted() 和 sorted(Comparator)
+// 该方法有两个重载函数，不提供参数则使用默认比较方法
+// 提供一个比较器接口 Comparator 接口可以按照我们的要求进行排序
+list.stream().sorted()
+                .forEach(System.out::println);
+// 3. 利用流进行映射操作，中间操作
+// 通过 map(Function) 可以对流进行映射操作
+list.stream().map(s -> s.replaceAll("http[s]?://", ""))
+                .forEach(System.out::println);
+// 4. 利用流进行匹配操作，最终操作
+// anyMatch(Predicate) 只要流中有任意一个匹配，则返回 true，否则返回 false
+boolean hasUrl = list.stream().anyMatch(s->s.startsWith("http://") || s.startsWith("https://"));
+System.out.println(hasUrl);
+// allMatch(Predicate) 流中所有的元素都需要匹配才返回 true，否则返回 false
+boolean isAllUrl = list.stream().anyMatch(s->s.startsWith("http://") || s.startsWith("https://"));
+System.out.println(isAllUrl);
+// noneMatch(Predicate) 流中没有元素匹配返回ture，否则返回 false
+boolean hasNoneUrl = list.stream().noneMatch(s -> s.startsWith("http://") || s.startsWith("https://"));
+System.out.println(hasNoneUrl);
+// 5. 利用流进行计数，最终操作
+long urlCount = list.stream().filter(s -> s.startsWith("http://") || s.startsWith("https://"))
+                            .count();
+System.out.println(urlCount);
+// 6. 利用流进行规约操作，最终操作
+// 这个操作会将流中所有的元素按照一定的运算规则（二元运算）合并成一个元素
+String totalUrl = list.stream().reduce((s1, s2)->s1+"#"+s2).orElse("Nothing");
+System.out.println(totalUrl);
+
+int[] ints = {'A', 'B', 'C'};
+Arrays.stream(ints).forEach(System.out::println);
+String[] strings = (String[]) list.toArray();
+Stream.of(strings).forEach(System.out::println);
+```  
+
+## Date API（日期相关的 API）  
+
+Java 8 在 `java.time` 包下新增了一个全新的日期和时间 API。
