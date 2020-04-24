@@ -236,10 +236,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-23 14:21:39 / 修改时间：22:48:59" itemprop="dateCreated datePublished" datetime="2020-04-23T14:21:39+08:00">2020-04-23</time>
+              <time title="创建时间：2020-04-23 14:21:39" itemprop="dateCreated datePublished" datetime="2020-04-23T14:21:39+08:00">2020-04-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -397,7 +403,72 @@ optional.ifPresent(s-&gt;System.out.println(s.trim())); <span class="comment">//
 <li>尽可能延后处理 null 的时机，在过程中使用 Optional 以保持不确定性。</li>
 <li>尽量避免使用 Optional 作为字段类型。  </li>
 </ol>
-<h2 id="Stream（流操作）"><a href="#Stream（流操作）" class="headerlink" title="Stream（流操作）"></a>Stream（流操作）</h2>
+<h2 id="Stream（流操作）"><a href="#Stream（流操作）" class="headerlink" title="Stream（流操作）"></a>Stream（流操作）</h2><p>Java 8 中，为了增强对序列的操作，引入了流的概念。流相当于一个迭代器，但是它有更多的 API 可供操作，同时提供了并发流利用多线程加快序列的操作速度。  </p>
+<p>流操作的基本用法如下：  </p>
+<p>从数据源中获取流 -&gt; 数据转换 -&gt; 执行操作 -&gt; 获取最终结果。流操作分为中间操作和最终操作，中间操作返回处理后的流对象，可以供下一个中间操作或者最终操作调用。也就意味着我们可以对流进行一系列的链式操作，但是这一系列的操作中只能有一个最终操作。  </p>
+<p>可以作为数据源的对象主要有：  </p>
+<ul>
+<li>Collection 或 数组<ul>
+<li>Collection.stream() </li>
+<li>Collection.parallelStream()（并行流）</li>
+<li>Arrays.stream(T array)</li>
+<li>Stream.of(T… array)</li>
+</ul>
+</li>
+<li>BufferedReader<ul>
+<li>BufferedReader.lines()</li>
+</ul>
+</li>
+<li>静态工厂<ul>
+<li>java.util.IntStream.range()</li>
+<li>java.nio.file.Files.walk()</li>
+</ul>
+</li>
+</ul>
+<p>下面是流操作的用例：  </p>
+<pre><code class="java"><span class="comment">// Stream 表示应用在一组元素上，一次性执行的操作序列</span>
+<span class="comment">// 流上的操作分为：中间操作和最终操作，中间操作返回处理好的 Stream</span>
+<span class="comment">// 我们可以将多个操作一次串起来来达到我们的目的</span>
+List&lt;String&gt; list = Arrays.asList(<span class="string">"http://www.baidu.com"</span>, <span class="string">"https://www.baidu.com"</span>, <span class="string">"https://www.bilibili.com"</span>);
+<span class="comment">// 1. 利用流进行过滤操作，中间操作</span>
+<span class="comment">// filter(Predicate) 提供一个 Predicate 接口可以对流进行过滤</span>
+list.stream().filter(s -&gt; s.startsWith(<span class="string">"https://"</span>))
+                .forEach(System.out::println);
+<span class="comment">// 2. 利用流进行排序操作，中间操作</span>
+<span class="comment">// sorted() 和 sorted(Comparator)</span>
+<span class="comment">// 该方法有两个重载函数，不提供参数则使用默认比较方法</span>
+<span class="comment">// 提供一个比较器接口 Comparator 接口可以按照我们的要求进行排序</span>
+list.stream().sorted()
+                .forEach(System.out::println);
+<span class="comment">// 3. 利用流进行映射操作，中间操作</span>
+<span class="comment">// 通过 map(Function) 可以对流进行映射操作</span>
+list.stream().map(s -&gt; s.replaceAll(<span class="string">"http[s]?://"</span>, <span class="string">""</span>))
+                .forEach(System.out::println);
+<span class="comment">// 4. 利用流进行匹配操作，最终操作</span>
+<span class="comment">// anyMatch(Predicate) 只要流中有任意一个匹配，则返回 true，否则返回 false</span>
+<span class="keyword">boolean</span> hasUrl = list.stream().anyMatch(s-&gt;s.startsWith(<span class="string">"http://"</span>) || s.startsWith(<span class="string">"https://"</span>));
+System.out.println(hasUrl);
+<span class="comment">// allMatch(Predicate) 流中所有的元素都需要匹配才返回 true，否则返回 false</span>
+<span class="keyword">boolean</span> isAllUrl = list.stream().anyMatch(s-&gt;s.startsWith(<span class="string">"http://"</span>) || s.startsWith(<span class="string">"https://"</span>));
+System.out.println(isAllUrl);
+<span class="comment">// noneMatch(Predicate) 流中没有元素匹配返回ture，否则返回 false</span>
+<span class="keyword">boolean</span> hasNoneUrl = list.stream().noneMatch(s -&gt; s.startsWith(<span class="string">"http://"</span>) || s.startsWith(<span class="string">"https://"</span>));
+System.out.println(hasNoneUrl);
+<span class="comment">// 5. 利用流进行计数，最终操作</span>
+<span class="keyword">long</span> urlCount = list.stream().filter(s -&gt; s.startsWith(<span class="string">"http://"</span>) || s.startsWith(<span class="string">"https://"</span>))
+                            .count();
+System.out.println(urlCount);
+<span class="comment">// 6. 利用流进行规约操作，最终操作</span>
+<span class="comment">// 这个操作会将流中所有的元素按照一定的运算规则（二元运算）合并成一个元素</span>
+String totalUrl = list.stream().reduce((s1, s2)-&gt;s1+<span class="string">"#"</span>+s2).orElse(<span class="string">"Nothing"</span>);
+System.out.println(totalUrl);
+
+<span class="keyword">int</span>[] ints = {<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>};
+Arrays.stream(ints).forEach(System.out::println);
+String[] strings = (String[]) list.toArray();
+Stream.of(strings).forEach(System.out::println);</code></pre>
+<h2 id="Date-API（日期相关的-API）"><a href="#Date-API（日期相关的-API）" class="headerlink" title="Date API（日期相关的 API）"></a>Date API（日期相关的 API）</h2><p>Java 8 在 <code>java.time</code> 包下新增了一个全新的日期和时间 API。</p>
+
       
     </div>
 
@@ -439,10 +510,16 @@ optional.ifPresent(s-&gt;System.out.println(s.trim())); <span class="comment">//
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-04-23 12:57:59 / 修改时间：22:48:59" itemprop="dateCreated datePublished" datetime="2020-04-23T12:57:59+08:00">2020-04-23</time>
+              <time title="创建时间：2020-04-23 12:57:59" itemprop="dateCreated datePublished" datetime="2020-04-23T12:57:59+08:00">2020-04-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -522,7 +599,7 @@ optional.ifPresent(s-&gt;System.out.println(s.trim())); <span class="comment">//
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-23 22:48:59" itemprop="dateModified" datetime="2020-04-23T22:48:59+08:00">2020-04-23</time>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -629,7 +706,7 @@ optional.ifPresent(s-&gt;System.out.println(s.trim())); <span class="comment">//
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-23 22:48:59" itemprop="dateModified" datetime="2020-04-23T22:48:59+08:00">2020-04-23</time>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -747,7 +824,7 @@ optional.ifPresent(s-&gt;System.out.println(s.trim())); <span class="comment">//
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-23 22:48:59" itemprop="dateModified" datetime="2020-04-23T22:48:59+08:00">2020-04-23</time>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -847,7 +924,7 @@ optional.ifPresent(s-&gt;System.out.println(s.trim())); <span class="comment">//
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-23 22:48:59" itemprop="dateModified" datetime="2020-04-23T22:48:59+08:00">2020-04-23</time>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -974,7 +1051,7 @@ optional.ifPresent(s-&gt;System.out.println(s.trim())); <span class="comment">//
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-23 22:48:59" itemprop="dateModified" datetime="2020-04-23T22:48:59+08:00">2020-04-23</time>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1121,7 +1198,7 @@ optional.ifPresent(s-&gt;System.out.println(s.trim())); <span class="comment">//
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-23 22:48:59" itemprop="dateModified" datetime="2020-04-23T22:48:59+08:00">2020-04-23</time>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1252,7 +1329,7 @@ bfi.read(buff, <span class="number">0</span>, <span class="number">1024</span>);
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-23 22:48:59" itemprop="dateModified" datetime="2020-04-23T22:48:59+08:00">2020-04-23</time>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1360,7 +1437,7 @@ Class&lt;Integer&gt; clazz2 = int.class;</code></pre><p>这两种 Class 引用�
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-23 22:48:59" itemprop="dateModified" datetime="2020-04-23T22:48:59+08:00">2020-04-23</time>
+                <time title="修改时间：2020-04-24 18:22:45" itemprop="dateModified" datetime="2020-04-24T18:22:45+08:00">2020-04-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
