@@ -284,3 +284,51 @@ Stream.of(strings).forEach(System.out::println);
 ## Date API（日期相关的 API）  
 
 Java 8 在 `java.time` 包下新增了一个全新的日期和时间 API。
+
+1. java.time.Clock   
+    这个类主要用于获取指定时区的日期和时间，它是时区性的。也就是说，这个类所代表的时间会包含时区信息。它可以取代 `System.currentTimeMillis()` 方法来获取当前时刻的时间戳。  
+    ```java
+    Clock clock = Clock.systemDefaultZone();
+    System.out.println(clock.millis);
+    // output: 一个当前时刻的时间戳
+    ```
+    Clock 类的最佳实践是用来作为一些依赖注入框架中的依赖对象。比如在 Spring 中，一个 Bean 需要依赖注入一个时钟对象，然后这个 Bean 的方法可以使用这个依赖注入的对象进行时间判断。  
+    ```java
+    public class MyBean {
+        private final Clock clock; // dependency inject
+        public MyBean(Clock clock) {
+            this.clock = clock;
+        }
+        public void process(LocalDate date) {
+            ...
+            boolean isBefore = date.isBefore(clock);
+            ...
+        }
+    }
+    ```
+2. java.time.Instant   
+    这个类主要被用作代表某一瞬时时刻的时间戳。可以精确到纳秒。主要有以下几个方法：  
+    ```java
+    Instant instant = Instant.now(); // 用于获取当前时刻
+    Instant instant1 = Instant.new(Clock) // 用于获取指定 Clock 所对应的时刻
+    instant.isAfter(instant1); // 比较两个时刻的前后关系
+    instant.isBefore(instant1);
+
+3. java.time.LocalDate  
+    这个类被用来获取无时区信息的本地日期信息。可以用 parse 方法从字符串中解析出日期对象。
+
+4. java.time.LocalTime  
+    这个类被用来获取无时区信息的本地时间信息。可以用 parse 方法从字符串中解析出时间信息。
+
+5. java.time.LocalDateTime
+    这个类是3，4两个类的综合体，有着类似的处理方法。
+
+6. java.time.format.DateTimeFormatter
+    该类用来格式化解析和生成字符串中的时间信息。相对于 SimpleDateFormat，他是类型安全的。  
+    ```java
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH点mm分ss秒");
+    LocalDateTime dateTime = LocalDateTime.now();
+    System.out.println(dateTime.format(formatter)); // expected output: 2020年04月26日 15点50分00秒
+    dateTime = LocalDateTime.parse("2000年01月31日 12点00分00秒", formatter);
+    System.out.println(dateTime.format(formatter)); // expected output: 2000年01月31日 12点00分00秒
+    ```
